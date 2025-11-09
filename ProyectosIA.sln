@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OchoReinasSolver", "OchoRei
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OchoPuzzle", "OchoPuzzle\OchoPuzzle.csproj", "{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SEL", "SEL\SEL.csproj", "{EA81BC41-E7FD-4A3D-A851-F96A5324D95C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA81BC41-E7FD-4A3D-A851-F96A5324D95C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA81BC41-E7FD-4A3D-A851-F96A5324D95C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA81BC41-E7FD-4A3D-A851-F96A5324D95C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA81BC41-E7FD-4A3D-A851-F96A5324D95C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

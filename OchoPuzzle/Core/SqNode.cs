@@ -1,21 +1,22 @@
 ﻿// Archivo: OchoPuzzle/Core/SqNode.cs
-using SEL;
+using SEL; // Ahora sí encontrará 'SEL'
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 
 namespace OchoPuzzle.Core
 {
+    // Arreglado: 'IComparable<SqNode>' y los 'null'
     public class SqNode : IGNode<SqNode>, IComparable<SqNode>
     {
-        public static int width = 3; // 3x3 para el 8-Puzzle
+        public static int width = 3;
         public int[,] position;
         public Point zero;
         public SqNode theParent = null;
         public List<Point> okMoves;
 
-        public int movesFromStart = 0; // 'g'
-        public int movesToGoal = 0;    // 'h'
+        public int movesFromStart = 0;
+        public int movesToGoal = 0;
 
         public SqNode(int[,] positionP, SqNode par, Point zeroP)
         {
@@ -114,8 +115,11 @@ namespace OchoPuzzle.Core
             return false;
         }
 
+        // Arreglado: El 'other' ya no acepta nulos
         public int CompareTo(SqNode other)
         {
+            if (other == null) return 1;
+
             for (int i = 0; i < width; i++)
                 for (int j = 0; j < width; j++)
                 {
@@ -127,6 +131,7 @@ namespace OchoPuzzle.Core
 
         public bool Equals(SqNode other)
         {
+            if (other == null) return false;
             if (other == this) return true;
             return (this.CompareTo(other) == 0);
         }
