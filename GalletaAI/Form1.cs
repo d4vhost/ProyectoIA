@@ -14,7 +14,7 @@ namespace GalletaAI
         // Configuración visual
         private const int DOT_RADIUS = 8;
         private const int LINE_WIDTH = 5;
-        private const int GRID_SIZE = 60; // Tamaño de la cuadrícula del background (más grande)
+        private const int GRID_SIZE = 60; // Tamaño de la cuadrícula del background
         private int _cellSize = 120; // 2 cuadros de la cuadrícula = 1 celda del juego
 
         // Para resaltar la línea sobre la que está el mouse
@@ -26,12 +26,17 @@ namespace GalletaAI
         public Form1()
         {
             InitializeComponent();
-            StartNewGame();
 
             this.DoubleBuffered = true;
-            this.Paint += Form1_Paint;
             this.BackColor = Color.FromArgb(245, 245, 245);
             this.ClientSize = new Size(700, 750);
+
+            this.Paint += Form1_Paint;
+            this.MouseMove += Form1_MouseMove;
+            this.MouseClick += Form1_MouseClick;
+            btnNewGame.Click += btnNewGame_Click;
+
+            StartNewGame();
         }
 
         private void StartNewGame()
@@ -56,26 +61,29 @@ namespace GalletaAI
             int centerX = this.ClientSize.Width / 2;
             int centerY = this.ClientSize.Height / 2 + 20;
 
-            // Solo dibujar la cuadrícula
+            // Dibujar la cuadrícula de fondo
             DrawGridBackground(g);
 
-            // Comentado temporalmente para ver solo la cuadrícula
-            //DrawDiamondCorners(g, centerX, centerY);
-            //DrawDots(g, centerX, centerY);
-            //DrawGameLines(g, centerX, centerY);
+            // Dibujar el diamante pixelado grande
+            DrawPixelatedDiamond(g, centerX, centerY);
 
-            //if (_hoveredMove != null && !_aiThinking)
-            //{
-            //    DrawMove(g, _hoveredMove, new Pen(Color.FromArgb(180, 100, 149, 237), LINE_WIDTH + 3), centerX, centerY);
-            //}
+            // Dibujar las líneas del juego
+            DrawGameLines(g, centerX, centerY);
 
-            //DrawSquareOwners(g, centerX, centerY);
+            // Dibujar la línea resaltada (hover)
+            if (_hoveredMove != null && !_aiThinking)
+            {
+                DrawMove(g, _hoveredMove, new Pen(Color.FromArgb(180, 100, 149, 237), LINE_WIDTH + 3), centerX, centerY);
+            }
+
+            // Dibujar los dueños de los cuadros
+            DrawSquareOwners(g, centerX, centerY);
         }
 
         private void DrawGridBackground(Graphics g)
         {
-            // Cuadrícula mucho más visible (casi negro)
-            Pen gridPen = new Pen(Color.FromArgb(200, 0, 0, 0), 2);
+            // Cuadrícula de fondo
+            Pen gridPen = new Pen(Color.FromArgb(200, 220, 220, 220), 1);
 
             for (int x = 0; x < this.ClientSize.Width; x += GRID_SIZE)
                 g.DrawLine(gridPen, x, 0, x, this.ClientSize.Height);
@@ -83,40 +91,67 @@ namespace GalletaAI
                 g.DrawLine(gridPen, 0, y, this.ClientSize.Width, y);
         }
 
-        // AQUÍ ESTÁ LA CLAVE: Definir qué cuadros son las esquinas del rombo
-        private bool IsCornerSquare(int r, int c)
+        private void DrawPixelatedDiamond(Graphics g, int centerX, int centerY)
         {
-            // Esquina SUPERIOR: fila 0, columna 1 o 2
-            if (r == 0 && (c == 1 || c == 2)) return true;
+            // Tamaño del pixel en la cuadrícula
+            int pixelSize = GRID_SIZE;
 
-            // Esquina INFERIOR: fila 3, columna 1 o 2
-            if (r == 3 && (c == 1 || c == 2)) return true;
-
-            // Esquina IZQUIERDA: fila 1 o 2, columna 0
-            if ((r == 1 || r == 2) && c == 0) return true;
-
-            // Esquina DERECHA: fila 1 o 2, columna 3
-            if ((r == 1 || r == 2) && c == 3) return true;
-
-            return false;
-        }
-
-        private void DrawDiamondCorners(Graphics g, int centerX, int centerY)
-        {
-            // Dibujar las esquinas negras del rombo escalonado
-            for (int r = 0; r < GameState.BOARD_SIZE; r++)
+            // Definir el patrón del diamante (MUCHO MÁS GRANDE)
+            // Cada fila representa cuántos píxeles a cada lado del centro
+            int[][] diamondPattern = new int[][]
             {
-                for (int c = 0; c < GameState.BOARD_SIZE; c++)
-                {
-                    if (IsCornerSquare(r, c))
-                    {
-                        Point p1 = GetDotPosition(r, c, centerX, centerY);
-                        Point p2 = GetDotPosition(r, c + 1, centerX, centerY);
-                        Point p3 = GetDotPosition(r + 1, c + 1, centerX, centerY);
-                        Point p4 = GetDotPosition(r + 1, c, centerX, centerY);
+                new int[] {0, 1},      // Fila 0: 1 pixel (esquina superior)
+                new int[] {-1, 2},     // Fila 1: 3 pixels
+                new int[] {-2, 3},     // Fila 2: 5 pixels
+                new int[] {-3, 4},     // Fila 3: 7 pixels
+                new int[] {-4, 5},     // Fila 4: 9 pixels
+                new int[] {-5, 6},     // Fila 5: 11 pixels
+                new int[] {-6, 7},     // Fila 6: 13 pixels
+                new int[] {-7, 8},     // Fila 7: 15 pixels
+                new int[] {-8, 9},     // Fila 8: 17 pixels (centro)
+                new int[] {-7, 8},     // Fila 9: 15 pixels
+                new int[] {-6, 7},     // Fila 10: 13 pixels
+                new int[] {-5, 6},     // Fila 11: 11 pixels
+                new int[] {-4, 5},     // Fila 12: 9 pixels
+                new int[] {-3, 4},     // Fila 13: 7 pixels
+                new int[] {-2, 3},     // Fila 14: 5 pixels
+                new int[] {-1, 2},     // Fila 15: 3 pixels
+                new int[] {0, 1}       // Fila 16: 1 pixel (esquina inferior)
+            };
 
-                        Point[] square = { p1, p2, p3, p4 };
-                        g.FillPolygon(Brushes.Black, square);
+            // Dibujar el diamante pixel por pixel
+            int startY = centerY - (diamondPattern.Length * pixelSize / 2);
+
+            for (int row = 0; row < diamondPattern.Length; row++)
+            {
+                int startCol = diamondPattern[row][0];
+                int endCol = diamondPattern[row][1];
+
+                int y = startY + (row * pixelSize);
+
+                for (int col = startCol; col < endCol; col++)
+                {
+                    int x = centerX + (col * pixelSize);
+
+                    // Verificar si es una esquina del rombo
+                    bool isCorner = (row == 0 && col == 0) ||                    // Esquina superior
+                                    (row == 8 && col == -8) ||                    // Esquina izquierda
+                                    (row == 8 && col == 8) ||                     // Esquina derecha
+                                    (row == 16 && col == 0);                      // Esquina inferior
+
+                    if (isCorner)
+                    {
+                        // Pintar las esquinas de negro
+                        using (SolidBrush brush = new SolidBrush(Color.Black))
+                        {
+                            g.FillRectangle(brush, x, y, pixelSize, pixelSize);
+                        }
+                    }
+
+                    // Dibujar borde del pixel
+                    using (Pen borderPen = new Pen(Color.Black, 4))
+                    {
+                        g.DrawRectangle(borderPen, x, y, pixelSize, pixelSize);
                     }
                 }
             }
@@ -124,9 +159,6 @@ namespace GalletaAI
 
         private Point GetDotPosition(int row, int col, int centerX, int centerY)
         {
-            // Alinear a la cuadrícula del background (múltiplos de GRID_SIZE)
-            // Sin desplazamientos artificiales, usar la cuadrícula natural
-
             int x = centerX + (col - 2) * _cellSize;
             int y = centerY + (row - 2) * _cellSize;
 
@@ -212,9 +244,6 @@ namespace GalletaAI
             {
                 for (int c = 0; c < GameState.BOARD_SIZE; c++)
                 {
-                    // No dibujar en las esquinas del rombo
-                    if (IsCornerSquare(r, c)) continue;
-
                     Player owner = _gameState.SquareOwners[r, c];
                     if (owner != Player.None)
                     {
@@ -439,6 +468,11 @@ namespace GalletaAI
 
             MessageBox.Show($"{winner}\n\nPuntuación final:\nHumano: {_gameState.HumanScore}\nIA: {_gameState.AIScore}",
                             "Juego Terminado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

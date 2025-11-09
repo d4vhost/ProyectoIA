@@ -52,7 +52,9 @@
             Controls.Add(lblStatus);
             Margin = new Padding(3, 4, 3, 4);
             Name = "Form1";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Juego de la Galleta (Dots and Boxes)";
+            WindowState = FormWindowState.Maximized;
             ResumeLayout(false);
             PerformLayout();
         }
