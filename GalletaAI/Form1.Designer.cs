@@ -25,7 +25,7 @@
             // lblStatus
             // 
             lblStatus.AutoSize = true;
-            lblStatus.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            lblStatus.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             lblStatus.Location = new Point(14, 12);
             lblStatus.Name = "lblStatus";
             lblStatus.Size = new Size(177, 28);
