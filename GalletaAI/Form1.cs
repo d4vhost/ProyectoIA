@@ -64,7 +64,7 @@ namespace GalletaAI
             // Dibujar la cuadrícula de fondo
             DrawGridBackground(g);
 
-            // Dibujar el diamante pixelado grande
+            // Dibujar el diamante pixelado (solo bordes)
             DrawPixelatedDiamond(g, centerX, centerY);
 
             // Dibujar las líneas del juego
@@ -96,7 +96,7 @@ namespace GalletaAI
             // Tamaño del pixel en la cuadrícula
             int pixelSize = GRID_SIZE;
 
-            // Definir el patrón del diamante (MUCHO MÁS GRANDE)
+            // Definir el patrón del diamante - solo las esquinas
             // Cada fila representa cuántos píxeles a cada lado del centro
             int[][] diamondPattern = new int[][]
             {
@@ -119,8 +119,10 @@ namespace GalletaAI
                 new int[] {0, 1}       // Fila 16: 1 pixel (esquina inferior)
             };
 
-            // Dibujar el diamante pixel por pixel
+            // Dibujar solo el BORDE del diamante (no el relleno)
             int startY = centerY - (diamondPattern.Length * pixelSize / 2);
+
+            Pen borderPen = new Pen(Color.Black, 4);
 
             for (int row = 0; row < diamondPattern.Length; row++)
             {
@@ -129,28 +131,26 @@ namespace GalletaAI
 
                 int y = startY + (row * pixelSize);
 
+                // Solo dibujar los píxeles de los BORDES (izquierdo y derecho de cada fila)
                 for (int col = startCol; col < endCol; col++)
                 {
                     int x = centerX + (col * pixelSize);
 
-                    // Verificar si es una esquina del rombo
-                    bool isCorner = (row == 0 && col == 0) ||                    // Esquina superior
-                                    (row == 8 && col == -8) ||                    // Esquina izquierda
-                                    (row == 8 && col == 8) ||                     // Esquina derecha
-                                    (row == 16 && col == 0);                      // Esquina inferior
+                    // Solo dibujar si es un pixel del borde
+                    bool isLeftEdge = (col == startCol);
+                    bool isRightEdge = (col == endCol - 1);
+                    bool isTopCorner = (row == 0 && col == 0);
+                    bool isBottomCorner = (row == diamondPattern.Length - 1 && col == 0);
 
-                    if (isCorner)
+                    if (isLeftEdge || isRightEdge || isTopCorner || isBottomCorner)
                     {
-                        // Pintar las esquinas de negro
+                        // Rellenar el cuadrado de negro
                         using (SolidBrush brush = new SolidBrush(Color.Black))
                         {
                             g.FillRectangle(brush, x, y, pixelSize, pixelSize);
                         }
-                    }
 
-                    // Dibujar borde del pixel
-                    using (Pen borderPen = new Pen(Color.Black, 4))
-                    {
+                        // Dibujar el borde del pixel
                         g.DrawRectangle(borderPen, x, y, pixelSize, pixelSize);
                     }
                 }
