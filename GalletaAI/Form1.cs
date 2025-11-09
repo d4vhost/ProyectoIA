@@ -1,283 +1,284 @@
+﻿// Archivo: GalletaAI/Form1.cs
 using GalletaAI.Core;
-using SEL;
-using System.Drawing.Drawing2D;
+using System;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace GalletaAI
 {
     public partial class Form1 : Form
     {
-        private GameState _gameState;
-        private AILogic _aiLogic;
+        private GameState _gameState = null!;
+        private AILogic _aiLogic = null!;
 
-        // Configuraci�n de gr�ficos
-        private const int DOT_SIZE = 10;
-        private const int LINE_WIDTH = 6;
-        private const int CELL_SIZE = 80;
-        private const int PADDING = 40;
+        // Configuración visual
+        private const int DOT_RADIUS = 6;
+        private const int LINE_WIDTH = 4;
+        private const int MARGIN = 50;
+        private int _cellSize = 80;
 
-        private Move? _hoverMove = null;
+        // Para resaltar la línea sobre la que está el mouse
+        private Move? _hoveredMove = null;
 
         public Form1()
         {
             InitializeComponent();
-
-            // Usar doble b�fer para evitar parpadeo
-            this.SetStyle(ControlStyles.AllPaintingInWmPaint |
-                          ControlStyles.UserPaint |
-                          ControlStyles.OptimizedDoubleBuffer, true);
-
             StartNewGame();
+
+            // Hacer el formulario de doble buffer para evitar parpadeo
+            this.DoubleBuffered = true;
+            this.Paint += Form1_Paint;
         }
 
         private void StartNewGame()
         {
             _gameState = new GameState();
-            _aiLogic = new AILogic(depthBound: 7); // Profundidad de 7
-            this.Text = "Juego de la Galleta - Turno: Humano";
-            this.lblStatus.Text = "Humano: 0  |  IA: 0";
-            this.Refresh();
+            _aiLogic = new AILogic(depthBound: 6); // Puedes ajustar la profundidad aquí
+            lblStatus.Text = $"Humano: {_gameState.HumanScore} | IA: {_gameState.AIScore}";
+            this.Invalidate(); // Redibujar el tablero
         }
 
-        protected override void OnPaint(PaintEventArgs e)
+        private void btnNewGame_Click(object? sender, EventArgs e)
         {
-            base.OnPaint(e);
+            StartNewGame();
+        }
+
+        // Dibuja el tablero completo
+        private void Form1_Paint(object? sender, PaintEventArgs e)
+        {
             Graphics g = e.Graphics;
-            g.SmoothingMode = SmoothingMode.AntiAlias;
-            g.Clear(Color.WhiteSmoke);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-            DrawBoard(g);
-        }
-
-        private void DrawBoard(Graphics g)
-        {
-            int boardPixelSize = GameState.BOARD_SIZE * CELL_SIZE;
-
-            // Dibujar cuadros completados
-            for (int r = 0; r < GameState.BOARD_SIZE; r++)
-            {
-                for (int c = 0; c < GameState.BOARD_SIZE; c++)
-                {
-                    if (_gameState.SquareOwners[r, c] != Player.None)
-                    {
-                        Color color = (_gameState.SquareOwners[r, c] == Player.Human) ?
-                            Color.FromArgb(150, 200, 255) : Color.FromArgb(150, 255, 200);
-                        g.FillRectangle(new SolidBrush(color),
-                            PADDING + c * CELL_SIZE,
-                            PADDING + r * CELL_SIZE,
-                            CELL_SIZE, CELL_SIZE);
-                    }
-                }
-            }
-
-            // Dibujar l�neas
-            DrawLines(g, _gameState.HorizontalLines, true);
-            DrawLines(g, _gameState.VerticalLines, false);
-
-            // Dibujar l�nea "hover"
-            if (_hoverMove != null && _gameState.CurrentPlayer == Player.Human)
-            {
-                DrawLine(g, _hoverMove, Color.FromArgb(100, Color.LightGray));
-            }
-
-            // Dibujar puntos (como en la imagen que subiste)
+            // Dibujar los puntos (dots)
             for (int r = 0; r <= GameState.BOARD_SIZE; r++)
             {
                 for (int c = 0; c <= GameState.BOARD_SIZE; c++)
                 {
-                    g.FillEllipse(Brushes.Black,
-                        PADDING + c * CELL_SIZE - DOT_SIZE / 2,
-                        PADDING + r * CELL_SIZE - DOT_SIZE / 2,
-                        DOT_SIZE, DOT_SIZE);
+                    int x = MARGIN + c * _cellSize;
+                    int y = MARGIN + r * _cellSize;
+                    g.FillEllipse(Brushes.Black, x - DOT_RADIUS, y - DOT_RADIUS, DOT_RADIUS * 2, DOT_RADIUS * 2);
                 }
             }
-        }
 
-        private void DrawLines(Graphics g, bool[,] lines, bool isHorizontal)
-        {
-            using (Pen pen = new Pen(Color.Black, LINE_WIDTH))
+            // Dibujar las líneas horizontales
+            for (int r = 0; r <= GameState.BOARD_SIZE; r++)
             {
-                pen.StartCap = LineCap.Round;
-                pen.EndCap = LineCap.Round;
-
-                int rows = lines.GetLength(0);
-                int cols = lines.GetLength(1);
-
-                for (int r = 0; r < rows; r++)
+                for (int c = 0; c < GameState.BOARD_SIZE; c++)
                 {
-                    for (int c = 0; c < cols; c++)
+                    if (_gameState.HorizontalLines[r, c])
                     {
-                        if (lines[r, c])
+                        int x1 = MARGIN + c * _cellSize;
+                        int y1 = MARGIN + r * _cellSize;
+                        int x2 = MARGIN + (c + 1) * _cellSize;
+                        int y2 = y1;
+                        g.DrawLine(new Pen(Color.Blue, LINE_WIDTH), x1, y1, x2, y2);
+                    }
+                }
+            }
+
+            // Dibujar las líneas verticales
+            for (int r = 0; r < GameState.BOARD_SIZE; r++)
+            {
+                for (int c = 0; c <= GameState.BOARD_SIZE; c++)
+                {
+                    if (_gameState.VerticalLines[r, c])
+                    {
+                        int x1 = MARGIN + c * _cellSize;
+                        int y1 = MARGIN + r * _cellSize;
+                        int x2 = x1;
+                        int y2 = MARGIN + (r + 1) * _cellSize;
+                        g.DrawLine(new Pen(Color.Blue, LINE_WIDTH), x1, y1, x2, y2);
+                    }
+                }
+            }
+
+            // Resaltar la línea sobre la que está el mouse
+            if (_hoveredMove != null)
+            {
+                DrawMove(g, _hoveredMove, new Pen(Color.LightGray, LINE_WIDTH));
+            }
+
+            // Dibujar las iniciales de los dueños de los cuadros
+            for (int r = 0; r < GameState.BOARD_SIZE; r++)
+            {
+                for (int c = 0; c < GameState.BOARD_SIZE; c++)
+                {
+                    Player owner = _gameState.SquareOwners[r, c];
+                    if (owner != Player.None)
+                    {
+                        int x = MARGIN + c * _cellSize + _cellSize / 2;
+                        int y = MARGIN + r * _cellSize + _cellSize / 2;
+
+                        string text = (owner == Player.Human) ? "H" : "IA";
+                        Color color = (owner == Player.Human) ? Color.Green : Color.Red;
+
+                        using (Font font = new Font("Arial", 24, FontStyle.Bold))
                         {
-                            DrawLine(g, new Move(isHorizontal, r, c), pen);
+                            SizeF size = g.MeasureString(text, font);
+                            g.DrawString(text, font, new SolidBrush(color), x - size.Width / 2, y - size.Height / 2);
                         }
                     }
                 }
             }
         }
 
-        private void DrawLine(Graphics g, Move move, Pen pen)
+        private void DrawMove(Graphics g, Move move, Pen pen)
         {
-            int x1, y1, x2, y2;
             if (move.IsHorizontal)
             {
-                x1 = PADDING + move.Col * CELL_SIZE;
-                y1 = PADDING + move.Row * CELL_SIZE;
-                x2 = x1 + CELL_SIZE;
-                y2 = y1;
+                int x1 = MARGIN + move.Col * _cellSize;
+                int y1 = MARGIN + move.Row * _cellSize;
+                int x2 = MARGIN + (move.Col + 1) * _cellSize;
+                int y2 = y1;
+                g.DrawLine(pen, x1, y1, x2, y2);
             }
             else
             {
-                x1 = PADDING + move.Col * CELL_SIZE;
-                y1 = PADDING + move.Row * CELL_SIZE;
-                x2 = x1;
-                y2 = y1 + CELL_SIZE;
-            }
-            g.DrawLine(pen, x1, y1, x2, y2);
-        }
-        private void DrawLine(Graphics g, Move move, Color color)
-        {
-            using (Pen pen = new Pen(color, LINE_WIDTH))
-            {
-                pen.StartCap = LineCap.Round;
-                pen.EndCap = LineCap.Round;
-                DrawLine(g, move, pen);
+                int x1 = MARGIN + move.Col * _cellSize;
+                int y1 = MARGIN + move.Row * _cellSize;
+                int x2 = x1;
+                int y2 = MARGIN + (move.Row + 1) * _cellSize;
+                g.DrawLine(pen, x1, y1, x2, y2);
             }
         }
 
-
-        private void Form1_MouseClick(object sender, MouseEventArgs e)
+        // Detecta sobre qué línea está el mouse
+        private Move? GetMoveAtPosition(int mouseX, int mouseY)
         {
-            if (_gameState.CurrentPlayer != Player.Human || _gameState.IsGameOver())
-                return;
+            const int TOLERANCE = 10; // Distancia en píxeles para detectar una línea
 
-            Move? clickedMove = GetMoveFromMousePos(e.Location);
-
-            if (clickedMove != null)
-            {
-                // El jugador hizo un movimiento v�lido
-                _hoverMove = null;
-                ExecuteMove(clickedMove);
-            }
-        }
-
-        private void Form1_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (_gameState.CurrentPlayer != Player.Human)
-            {
-                _hoverMove = null;
-                return;
-            }
-
-            Move? newHoverMove = GetMoveFromMousePos(e.Location);
-
-            if (_hoverMove == null || !_hoverMove.Equals(newHoverMove))
-            {
-                _hoverMove = newHoverMove;
-                this.Refresh();
-            }
-        }
-
-        // L�gica para determinar en qu� l�nea se hizo clic
-        private Move? GetMoveFromMousePos(Point mousePos)
-        {
-            int tolerance = 10;
-
-            // Revisar l�neas horizontales
+            // Revisar líneas horizontales
             for (int r = 0; r <= GameState.BOARD_SIZE; r++)
             {
                 for (int c = 0; c < GameState.BOARD_SIZE; c++)
                 {
-                    if (_gameState.HorizontalLines[r, c]) continue; // Ya dibujada
+                    if (_gameState.HorizontalLines[r, c]) continue; // Ya está dibujada
 
-                    int y = PADDING + r * CELL_SIZE;
-                    int x1 = PADDING + c * CELL_SIZE;
-                    int x2 = x1 + CELL_SIZE;
+                    int x1 = MARGIN + c * _cellSize;
+                    int y1 = MARGIN + r * _cellSize;
+                    int x2 = MARGIN + (c + 1) * _cellSize;
 
-                    if (mousePos.Y >= y - tolerance && mousePos.Y <= y + tolerance &&
-                        mousePos.X >= x1 && mousePos.X <= x2)
+                    if (mouseY >= y1 - TOLERANCE && mouseY <= y1 + TOLERANCE &&
+                        mouseX >= x1 && mouseX <= x2)
                     {
                         return new Move(true, r, c);
                     }
                 }
             }
 
-            // Revisar l�neas verticales
+            // Revisar líneas verticales
             for (int r = 0; r < GameState.BOARD_SIZE; r++)
             {
                 for (int c = 0; c <= GameState.BOARD_SIZE; c++)
                 {
-                    if (_gameState.VerticalLines[r, c]) continue; // Ya dibujada
+                    if (_gameState.VerticalLines[r, c]) continue; // Ya está dibujada
 
-                    int x = PADDING + c * CELL_SIZE;
-                    int y1 = PADDING + r * CELL_SIZE;
-                    int y2 = y1 + CELL_SIZE;
+                    int x1 = MARGIN + c * _cellSize;
+                    int y1 = MARGIN + r * _cellSize;
+                    int y2 = MARGIN + (r + 1) * _cellSize;
 
-                    if (mousePos.X >= x - tolerance && mousePos.X <= x + tolerance &&
-                        mousePos.Y >= y1 && mousePos.Y <= y2)
+                    if (mouseX >= x1 - TOLERANCE && mouseX <= x1 + TOLERANCE &&
+                        mouseY >= y1 && mouseY <= y2)
                     {
                         return new Move(false, r, c);
                     }
                 }
             }
+
             return null;
         }
 
-        private async void ExecuteMove(Move move)
+        private void Form1_MouseMove(object? sender, MouseEventArgs e)
         {
-            Player nextPlayer = _gameState.ApplyMove(move);
-            UpdateUI();
-
-            if (nextPlayer == Player.Human)
+            if (_gameState.CurrentPlayer != Player.Human || _gameState.IsGameOver())
             {
-                // Humano tiene turno extra
+                _hoveredMove = null;
+                this.Invalidate();
                 return;
             }
 
-            // Es turno de la IA
-            this.Text = "Juego de la Galleta - Turno: IA (Pensando...)";
-            this.Cursor = Cursors.WaitCursor;
-
-            while (nextPlayer == Player.AI && !_gameState.IsGameOver())
+            Move? move = GetMoveAtPosition(e.X, e.Y);
+            if (move != _hoveredMove)
             {
-                // La IA piensa en un hilo separado para no congelar la UI
-                Move? aiMove = await Task.Run(() => _aiLogic.FindBestMove(new GameState(_gameState)));
+                _hoveredMove = move;
+                this.Invalidate();
+            }
+        }
 
-                if (aiMove != null)
-                {
-                    nextPlayer = _gameState.ApplyMove(aiMove);
-                    UpdateUI();
-                    // Peque�a pausa para ver el movimiento de la IA
-                    await Task.Delay(500);
-                }
-                else
-                {
-                    break; // No hay m�s movimientos
-                }
+        private async void Form1_MouseClick(object? sender, MouseEventArgs e)
+        {
+            if (_gameState.CurrentPlayer != Player.Human || _gameState.IsGameOver())
+                return;
+
+            Move? move = GetMoveAtPosition(e.X, e.Y);
+            if (move == null) return;
+
+            // El humano hace su movimiento
+            Player nextPlayer = _gameState.ApplyMove(move);
+            UpdateStatus();
+            this.Invalidate();
+
+            // Si el humano completó un cuadro, sigue su turno
+            if (nextPlayer == Player.Human)
+                return;
+
+            // Verificar si el juego terminó
+            if (_gameState.IsGameOver())
+            {
+                ShowGameOver();
+                return;
             }
 
-            this.Cursor = Cursors.Default;
+            // Turno de la IA (puede hacer múltiples movimientos si completa cuadros)
+            await Task.Delay(300); // Pequeña pausa para que el usuario vea el movimiento
+            await AITurn();
+        }
+
+        private async Task AITurn()
+        {
+            while (_gameState.CurrentPlayer == Player.AI && !_gameState.IsGameOver())
+            {
+                lblStatus.Text = "IA está pensando...";
+                this.Invalidate();
+                await Task.Delay(100);
+
+                Move? bestMove = await Task.Run(() => _aiLogic.FindBestMove(_gameState));
+
+                if (bestMove == null) break; // No hay movimiento válido
+
+                Player nextPlayer = _gameState.ApplyMove(bestMove);
+                UpdateStatus();
+                this.Invalidate();
+
+                await Task.Delay(300); // Pausa para visualizar
+
+                if (nextPlayer != Player.AI)
+                    break; // El turno pasa al humano
+            }
 
             if (_gameState.IsGameOver())
             {
-                string winner = (_gameState.HumanScore > _gameState.AIScore) ? "Humano" : "IA";
-                if (_gameState.HumanScore == _gameState.AIScore) winner = "Empate";
-                this.Text = $"Juego Terminado - Ganador: {winner}";
+                ShowGameOver();
             }
+        }
+
+        private void UpdateStatus()
+        {
+            lblStatus.Text = $"Humano: {_gameState.HumanScore} | IA: {_gameState.AIScore}";
+        }
+
+        private void ShowGameOver()
+        {
+            string winner;
+            if (_gameState.HumanScore > _gameState.AIScore)
+                winner = "¡Ganaste! 🎉";
+            else if (_gameState.AIScore > _gameState.HumanScore)
+                winner = "La IA ganó. 🤖";
             else
-            {
-                this.Text = "Juego de la Galleta - Turno: Humano";
-            }
-        }
+                winner = "¡Empate! 🤝";
 
-        private void UpdateUI()
-        {
-            lblStatus.Text = $"Humano: {_gameState.HumanScore}  |  IA: {_gameState.AIScore}";
-            this.Refresh();
-        }
-
-        private void btnNewGame_Click(object sender, EventArgs e)
-        {
-            StartNewGame();
+            MessageBox.Show($"{winner}\n\nPuntuación final:\nHumano: {_gameState.HumanScore}\nIA: {_gameState.AIScore}",
+                            "Juego Terminado", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

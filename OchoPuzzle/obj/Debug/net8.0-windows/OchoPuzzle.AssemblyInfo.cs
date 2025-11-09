@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OchoPuzzle")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+790a12c28e39893546e2c64eebdaacfea6e4662e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+90d29e4b4f34ee6f77b3d2093e85067ecda4ba88")]
 [assembly: System.Reflection.AssemblyProductAttribute("OchoPuzzle")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OchoPuzzle")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

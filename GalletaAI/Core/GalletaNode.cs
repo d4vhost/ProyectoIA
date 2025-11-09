@@ -1,4 +1,5 @@
-﻿using System;
+﻿// Archivo: GalletaAI/Core/GalletaNode.cs
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,12 +17,12 @@ namespace GalletaAI.Core
         public Player sideThatMoved; // El jugador que HIZO el movimiento para LLEGAR a este estado
         public Move? moveTaken = null; // El movimiento específico que se tomó
         public int evaluation = 0; // La puntuación heurística de este nodo
-        public GameState position; // El estado del tablero en este nodo
+        public GameState position = null!; // El estado del tablero en este nodo
 
         private List<Move>? moves; // Lista de movimientos pendientes por explorar
         private int depth = 0;
         private GalletaNode? theParent = null;
-        private static int depthBound = 6; // Profundidad de búsqueda. ¡¡AJUSTA ESTE VALOR!!
+        private static int depthBound = 6; // Profundidad de búsqueda.
                                            // 6 es rápido. 8-10 es más inteligente pero lento.
 
         // Constructor para el nodo RAÍZ
@@ -51,13 +52,13 @@ namespace GalletaAI.Core
             set { theParent = value; }
         }
 
-        // Basado en firstChild de ReversiNode (Cap. 8) [cite: 3833]
+        // Basado en firstChild de ReversiNode (Cap. 8) 
         public GalletaNode? firstChild()
         {
             if (depth == depthBound)
             {
                 // Hoja de búsqueda: calcula la heurística (la puntuación simple)
-               // Esta es la heurística del libro (puntuación material) [cite: 3834]
+                // Esta es la heurística del libro (puntuación material) 
                 evaluation = (position.AIScore - position.HumanScore);
                 return null;
             }
@@ -89,17 +90,17 @@ namespace GalletaAI.Core
             }
         }
 
-        // Basado en nextSibling de ReversiNode (Cap. 8) [cite: 3844]
+        // Basado en nextSibling de ReversiNode (Cap. 8) 
         public GalletaNode? nextSibling()
         {
             if (theParent == null) return null; // El nodo raíz no tiene hermanos
 
             // Esta es la lógica Minimax. Se llama cuando todos los hijos
             // de 'this' han sido explorados por DFS.
-            // La lógica es idéntica a la del Cap. 8 [cite: 3851]
+            // La lógica es idéntica a la del Cap. 8 
             minimax();
 
-            // Poda Alpha/Beta (idéntica al Cap. 8) [cite: 3894]
+            // Poda Alpha/Beta (idéntica al Cap. 8) 
             if (AlphaBetaPrune())
                 return null; // Podar el resto de hermanos
 
@@ -120,7 +121,7 @@ namespace GalletaAI.Core
             return sib;
         }
 
-        // Lógica Minimax idéntica al Cap. 8 [cite: 3851]
+        // Lógica Minimax idéntica al Cap. 8
         private bool minimax()
         {
             if (theParent == null) return false;
@@ -132,7 +133,7 @@ namespace GalletaAI.Core
             {
                 // El padre es MAX, por lo que los hijos son MIN (mueve Humano)
                 // El padre (MAX) quiere la *máxima* evaluación de sus hijos
-                // *Corrección*: El libro [cite: 3854] dice que el padre es la posición DESPUÉS de que el jugador movió.
+                // *Corrección*: El libro dice que el padre es la posición DESPUÉS de que el jugador movió.
                 // Si 'theParent.sideThatMoved == Player.AI', el padre es un estado al que llegó la IA.
                 // Los hijos son movimientos del Humano (nodos MIN).
                 // El padre MIN (Humano) elegirá la 'evaluation' MÁS BAJA.
@@ -159,12 +160,12 @@ namespace GalletaAI.Core
             return false;
         }
 
-        // Lógica de Poda Alpha/Beta, basada en Cap. 8 [cite: 3894]
+        // Lógica de Poda Alpha/Beta, basada en Cap. 8 
         private bool AlphaBetaPrune()
         {
             if (theParent?.parent == null) return false;
 
-            ReversiNode? n = (ReversiNode?)theParent.parent; // Abuelo
+            GalletaNode? n = theParent.parent; // Abuelo
 
             // Recorre la cadena de ancestros
             while (n != null)
@@ -186,7 +187,7 @@ namespace GalletaAI.Core
                             return true; // Podar
                     }
                 }
-                n = (ReversiNode?)n.parent;
+                n = n.parent;
             }
             return false;
         }
