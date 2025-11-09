@@ -9,7 +9,7 @@ namespace OchoPuzzle.Core
     public class SqPuzzle
     {
         public SqNode root;
-        public SqNode solutionNode = null;
+        public SqNode? solutionNode = null;
         public int nodesSearched = 0;
 
         public SqPuzzle(int[,] pos, Point zeroP)
@@ -46,7 +46,7 @@ namespace OchoPuzzle.Core
             }
 
             List<SqNode> path = new List<SqNode>();
-            SqNode current = solutionNode;
+            SqNode? current = solutionNode;
             while (current != null)
             {
                 path.Add(current);

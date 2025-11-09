@@ -1,0 +1,12 @@
+C:\Users\d4vho\Desktop\Proyectos\Ejercicios Cepeda\ProyectosIA\SEL\bin\Debug\net8.0\SEL.deps.json
+C:\Users\d4vho\Desktop\Proyectos\Ejercicios Cepeda\ProyectosIA\SEL\bin\Debug\net8.0\SEL.dll
+C:\Users\d4vho\Desktop\Proyectos\Ejercicios Cepeda\ProyectosIA\SEL\bin\Debug\net8.0\SEL.pdb
+C:\Users\d4vho\Desktop\Proyectos\Ejercicios Cepeda\ProyectosIA\SEL\obj\Debug\net8.0\SEL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\d4vho\Desktop\Proyectos\Ejercicios Cepeda\ProyectosIA\SEL\obj\Debug\net8.0\SEL.AssemblyInfoInputs.cache
+C:\Users\d4vho\Desktop\Proyectos\Ejercicios Cepeda\ProyectosIA\SEL\obj\Debug\net8.0\SEL.AssemblyInfo.cs
+C:\Users\d4vho\Desktop\Proyectos\Ejercicios Cepeda\ProyectosIA\SEL\obj\Debug\net8.0\SEL.csproj.CoreCompileInputs.cache
+C:\Users\d4vho\Desktop\Proyectos\Ejercicios Cepeda\ProyectosIA\SEL\obj\Debug\net8.0\SEL.sourcelink.json
+C:\Users\d4vho\Desktop\Proyectos\Ejercicios Cepeda\ProyectosIA\SEL\obj\Debug\net8.0\SEL.dll
+C:\Users\d4vho\Desktop\Proyectos\Ejercicios Cepeda\ProyectosIA\SEL\obj\Debug\net8.0\refint\SEL.dll
+C:\Users\d4vho\Desktop\Proyectos\Ejercicios Cepeda\ProyectosIA\SEL\obj\Debug\net8.0\SEL.pdb
+C:\Users\d4vho\Desktop\Proyectos\Ejercicios Cepeda\ProyectosIA\SEL\obj\Debug\net8.0\ref\SEL.dll

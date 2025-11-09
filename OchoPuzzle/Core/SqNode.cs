@@ -1,24 +1,23 @@
 ﻿// Archivo: OchoPuzzle/Core/SqNode.cs
-using SEL; // Ahora sí encontrará 'SEL'
+using SEL;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 
 namespace OchoPuzzle.Core
 {
-    // Arreglado: 'IComparable<SqNode>' y los 'null'
     public class SqNode : IGNode<SqNode>, IComparable<SqNode>
     {
         public static int width = 3;
         public int[,] position;
         public Point zero;
-        public SqNode theParent = null;
+        public SqNode? theParent = null;
         public List<Point> okMoves;
 
         public int movesFromStart = 0;
         public int movesToGoal = 0;
 
-        public SqNode(int[,] positionP, SqNode par, Point zeroP)
+        public SqNode(int[,] positionP, SqNode? par, Point zeroP)
         {
             theParent = par;
             position = positionP;
@@ -31,13 +30,13 @@ namespace OchoPuzzle.Core
             movesToGoal = this.getMovesToGoal();
         }
 
-        public SqNode parent
+        public SqNode? parent
         {
             get { return theParent; }
             set { theParent = value; }
         }
 
-        public SqNode firstChild()
+        public SqNode? firstChild()
         {
             if (movesToGoal == 0) return null;
 
@@ -53,7 +52,7 @@ namespace OchoPuzzle.Core
             return null;
         }
 
-        public SqNode nextSibling()
+        public SqNode? nextSibling()
         {
             if (parent == null) return null;
 
@@ -106,7 +105,7 @@ namespace OchoPuzzle.Core
 
         public bool occurred()
         {
-            SqNode n = this.parent;
+            SqNode? n = this.parent;
             while (n != null)
             {
                 if (this.Equals(n)) return true;
@@ -115,8 +114,8 @@ namespace OchoPuzzle.Core
             return false;
         }
 
-        // Arreglado: El 'other' ya no acepta nulos
-        public int CompareTo(SqNode other)
+        // Implementación correcta de IComparable<SqNode> con parámetro nullable
+        public int CompareTo(SqNode? other)
         {
             if (other == null) return 1;
 
@@ -129,7 +128,7 @@ namespace OchoPuzzle.Core
             return 0;
         }
 
-        public bool Equals(SqNode other)
+        public bool Equals(SqNode? other)
         {
             if (other == null) return false;
             if (other == this) return true;

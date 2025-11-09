@@ -9,22 +9,22 @@ namespace OchoReinasSolver.Core
         public static int max = 8;
         public int row = 1;
         public int col = 1;
-        Queen theParent = null;
+        Queen? theParent = null;
 
-        public Queen(int r, int c, Queen p)
+        public Queen(int r, int c, Queen? p)
         {
             row = r;
             col = c;
             theParent = p;
         }
 
-        public Queen parent
+        public Queen? parent
         {
             get { return theParent; }
             set { theParent = value; }
         }
 
-        public Queen nextSibling()
+        public Queen? nextSibling()
         {
             Queen q = new Queen(row, 1, parent);
 
@@ -36,7 +36,7 @@ namespace OchoReinasSolver.Core
             return null;
         }
 
-        public Queen firstChild()
+        public Queen? firstChild()
         {
             if (row >= max)
                 return null;
@@ -53,7 +53,7 @@ namespace OchoReinasSolver.Core
 
         public bool isvalid()
         {
-            Queen par = parent;
+            Queen? par = parent;
             while (par != null)
             {
                 if (par.col == this.col)

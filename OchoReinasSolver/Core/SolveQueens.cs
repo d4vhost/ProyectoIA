@@ -37,7 +37,7 @@ namespace OchoReinasSolver.Core
                 for (int j = 0; j < Queen.max; j++)
                     tablero[i, j] = '.';
 
-            Queen current = finalQueen;
+            Queen? current = finalQueen;
             while (current != null)
             {
                 tablero[current.row - 1, current.col - 1] = 'Q';

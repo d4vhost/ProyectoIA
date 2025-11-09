@@ -8,7 +8,7 @@ namespace SEL
     public class Graph<T> where T : class, IGNode<T>
     {
         private T _root;
-        private Comparison<T> _comparison;
+        private Comparison<T>? _comparison;
         private int _cutoff;
 
         public Graph(T rootNode)
@@ -34,11 +34,11 @@ namespace SEL
 
         public IEnumerable<T> depthFirst()
         {
-            T currentNode = _root;
+            T? currentNode = _root;
             while (currentNode != null)
             {
                 yield return currentNode;
-                T child = currentNode.firstChild();
+                T? child = currentNode.firstChild();
                 if (child != null)
                 {
                     currentNode = child;
@@ -47,7 +47,7 @@ namespace SEL
                 {
                     while (currentNode != null)
                     {
-                        T sibling = currentNode.nextSibling();
+                        T? sibling = currentNode.nextSibling();
                         if (sibling != null)
                         {
                             currentNode = sibling;
@@ -68,7 +68,7 @@ namespace SEL
                 foreach (T node in generation)
                 {
                     yield return node;
-                    T child = node.firstChild();
+                    T? child = node.firstChild();
                     while (child != null)
                     {
                         nextGeneration.Add(child);
@@ -81,6 +81,9 @@ namespace SEL
 
         public IEnumerable<T> bestFirst()
         {
+            if (_comparison == null)
+                throw new InvalidOperationException("Se requiere una función de comparación para bestFirst");
+
             List<T> generation = new List<T> { _root };
             while (generation.Count > 0)
             {
@@ -91,7 +94,7 @@ namespace SEL
                 foreach (T node in generation)
                 {
                     yield return node;
-                    T child = node.firstChild();
+                    T? child = node.firstChild();
                     while (child != null)
                     {
                         nextGeneration.Add(child);
@@ -104,13 +107,16 @@ namespace SEL
 
         public IEnumerable<T> greedy()
         {
-            T currentNode = _root;
+            if (_comparison == null)
+                throw new InvalidOperationException("Se requiere una función de comparación para greedy");
+
+            T? currentNode = _root;
             while (currentNode != null)
             {
                 yield return currentNode;
 
                 List<T> successors = new List<T>();
-                T child = currentNode.firstChild();
+                T? child = currentNode.firstChild();
                 while (child != null)
                 {
                     successors.Add(child);
@@ -129,6 +135,9 @@ namespace SEL
 
         public IEnumerable<T> beam()
         {
+            if (_comparison == null)
+                throw new InvalidOperationException("Se requiere una función de comparación para beam");
+
             List<T> generation = new List<T> { _root };
             while (generation.Count > 0)
             {
@@ -144,7 +153,7 @@ namespace SEL
                 foreach (T node in generation)
                 {
                     yield return node;
-                    T child = node.firstChild();
+                    T? child = node.firstChild();
                     while (child != null)
                     {
                         nextGeneration.Add(child);
@@ -159,6 +168,9 @@ namespace SEL
 
         public IEnumerable<T> Astar()
         {
+            if (_comparison == null)
+                throw new InvalidOperationException("Se requiere una función de comparación para A*");
+
             openList.Add(_root);
 
             while (openList.Count > 0)
@@ -170,7 +182,7 @@ namespace SEL
 
                 yield return bestNode;
 
-                T child = bestNode.firstChild();
+                T? child = bestNode.firstChild();
                 while (child != null)
                 {
                     openList.Add(child);
@@ -179,8 +191,11 @@ namespace SEL
             }
         }
 
-        public bool quit(T solution)
+        public bool quit(T? solution)
         {
+            if (_comparison == null)
+                throw new InvalidOperationException("Se requiere una función de comparación para quit");
+
             if (solution == null || openList.Count == 0)
                 return false;
 
