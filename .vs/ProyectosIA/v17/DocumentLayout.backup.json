@@ -3,6 +3,26 @@
   "WorkspaceRootPath": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}|OchoPuzzle\\OchoPuzzle.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\ochopuzzle\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}|OchoPuzzle\\OchoPuzzle.csproj|solutionrelative:ochopuzzle\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}|OchoPuzzle\\OchoPuzzle.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\ochopuzzle\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}|OchoPuzzle\\OchoPuzzle.csproj|solutionrelative:ochopuzzle\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}|OchoPuzzle\\OchoPuzzle.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\ochopuzzle\\core\\sqnode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}|OchoPuzzle\\OchoPuzzle.csproj|solutionrelative:ochopuzzle\\core\\sqnode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}|OchoPuzzle\\OchoPuzzle.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\ochopuzzle\\core\\sqpuzzle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}|OchoPuzzle\\OchoPuzzle.csproj|solutionrelative:ochopuzzle\\core\\sqpuzzle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}|OchoPuzzle\\OchoPuzzle.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\ochopuzzle\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}|OchoPuzzle\\OchoPuzzle.csproj|solutionrelative:ochopuzzle\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{EA81BC41-E7FD-4A3D-A851-F96A5324D95C}|SEL\\SEL.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\sel\\ignode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EA81BC41-E7FD-4A3D-A851-F96A5324D95C}|SEL\\SEL.csproj|solutionrelative:sel\\ignode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -23,20 +43,8 @@
       "RelativeMoniker": "D:0:0:{0A53913F-8B21-42D0-A780-C94590736CCF}|OchoReinasSolver\\OchoReinasSolver.csproj|solutionrelative:ochoreinassolver\\core\\queen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}|OchoPuzzle\\OchoPuzzle.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\ochopuzzle\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}|OchoPuzzle\\OchoPuzzle.csproj|solutionrelative:ochopuzzle\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}|OchoPuzzle\\OchoPuzzle.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\ochopuzzle\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}|OchoPuzzle\\OchoPuzzle.csproj|solutionrelative:ochopuzzle\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}|OchoPuzzle\\OchoPuzzle.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\ochopuzzle\\core\\sqpuzzle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}|OchoPuzzle\\OchoPuzzle.csproj|solutionrelative:ochopuzzle\\core\\sqpuzzle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}|OchoPuzzle\\OchoPuzzle.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\ochopuzzle\\core\\sqnode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}|OchoPuzzle\\OchoPuzzle.csproj|solutionrelative:ochopuzzle\\core\\sqnode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -46,11 +54,36 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoPuzzle\\Form1.cs",
+              "RelativeDocumentMoniker": "OchoPuzzle\\Form1.cs",
+              "ToolTip": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoPuzzle\\Form1.cs",
+              "RelativeToolTip": "OchoPuzzle\\Form1.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAAAQwCQAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-09T21:04:28.793Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Form1.cs [Dise\u00F1o]",
+              "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoPuzzle\\Form1.cs",
+              "RelativeDocumentMoniker": "OchoPuzzle\\Form1.cs",
+              "ToolTip": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoPuzzle\\Form1.cs [Dise\u00F1o]",
+              "RelativeToolTip": "OchoPuzzle\\Form1.cs [Dise\u00F1o]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-09T21:03:16.737Z",
+              "EditorCaption": " [Dise\u00F1o]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoReinasSolver\\Program.cs",
               "RelativeDocumentMoniker": "OchoReinasSolver\\Program.cs",
@@ -58,12 +91,11 @@
               "RelativeToolTip": "OchoReinasSolver\\Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-09T21:01:48.264Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-09T21:01:48.264Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 4,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoPuzzle\\Program.cs",
               "RelativeDocumentMoniker": "OchoPuzzle\\Program.cs",
@@ -76,7 +108,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 10,
               "Title": "Form1.Designer.cs",
               "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoPuzzle\\Form1.Designer.cs",
               "RelativeDocumentMoniker": "OchoPuzzle\\Form1.Designer.cs",
@@ -89,20 +121,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 3,
               "Title": "SqPuzzle.cs",
               "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoPuzzle\\Core\\SqPuzzle.cs",
               "RelativeDocumentMoniker": "OchoPuzzle\\Core\\SqPuzzle.cs",
               "ToolTip": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoPuzzle\\Core\\SqPuzzle.cs",
               "RelativeToolTip": "OchoPuzzle\\Core\\SqPuzzle.cs",
-              "ViewState": "AgIAAC4AAAAAAAAAAAAmwDoAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAC4AAAAAAAAAAAAmwDQAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-09T18:54:14.663Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 2,
               "Title": "SqNode.cs",
               "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoPuzzle\\Core\\SqNode.cs",
               "RelativeDocumentMoniker": "OchoPuzzle\\Core\\SqNode.cs",
@@ -115,7 +147,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 8,
               "Title": "SolveQueens.cs",
               "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoReinasSolver\\Core\\SolveQueens.cs",
               "RelativeDocumentMoniker": "OchoReinasSolver\\Core\\SolveQueens.cs",
@@ -123,12 +155,11 @@
               "RelativeToolTip": "OchoReinasSolver\\Core\\SolveQueens.cs",
               "ViewState": "AgIAAC4AAAAAAAAAAAAmwDoAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-09T18:53:22.839Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-09T18:53:22.839Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 9,
               "Title": "Queen.cs",
               "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoReinasSolver\\Core\\Queen.cs",
               "RelativeDocumentMoniker": "OchoReinasSolver\\Core\\Queen.cs",
@@ -136,12 +167,11 @@
               "RelativeToolTip": "OchoReinasSolver\\Core\\Queen.cs",
               "ViewState": "AgIAADkAAAAAAAAAAAAmwEUAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-09T18:53:03.831Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-09T18:53:03.831Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 6,
               "Title": "Graph.cs",
               "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\SEL\\Graph.cs",
               "RelativeDocumentMoniker": "SEL\\Graph.cs",
@@ -149,12 +179,11 @@
               "RelativeToolTip": "SEL\\Graph.cs",
               "ViewState": "AgIAAMMAAAAAAAAAAAAmwM8AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-09T18:52:24.776Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-09T18:52:24.776Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 5,
               "Title": "IGNode.cs",
               "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\SEL\\IGNode.cs",
               "RelativeDocumentMoniker": "SEL\\IGNode.cs",

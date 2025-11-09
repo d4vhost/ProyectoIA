@@ -15,7 +15,6 @@ namespace OchoPuzzle
         {
             InitializeComponent();
             InitializeBoard();
-            UpdateUI();
         }
 
         private void InitializeBoard()
@@ -33,7 +32,7 @@ namespace OchoPuzzle
             _zeroPos = new Point(SqNode.width - 1, SqNode.width - 1);
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void Form1_Load(object? sender, EventArgs e)
         {
             for (int i = 0; i < SqNode.width; i++)
             {
@@ -84,10 +83,13 @@ namespace OchoPuzzle
             UpdateUI();
         }
 
-        private void Button_Click(object sender, EventArgs e)
+        private void Button_Click(object? sender, EventArgs e)
         {
-            Button btn = (Button)sender;
-            Point pos = (Point)btn.Tag;
+            if (sender is not Button btn)
+                return;
+
+            if (btn.Tag is not Point pos)
+                return;
 
             if (Math.Abs(pos.X - _zeroPos.X) + Math.Abs(pos.Y - _zeroPos.Y) == 1)
             {
@@ -104,7 +106,7 @@ namespace OchoPuzzle
             }
         }
 
-        private async void btnSolve_Click(object sender, EventArgs e)
+        private async void btnSolve_Click(object? sender, EventArgs e)
         {
             this.Enabled = false;
             lblStatus.Text = "Calculando solución A*...";
@@ -135,7 +137,7 @@ namespace OchoPuzzle
             this.Enabled = true;
         }
 
-        private void btnShuffle_Click(object sender, EventArgs e)
+        private void btnShuffle_Click(object? sender, EventArgs e)
         {
             Random rand = new Random();
             for (int i = 0; i < 100; i++)
