@@ -42,7 +42,6 @@
             btnNewGame.TabIndex = 1;
             btnNewGame.Text = "Juego Nuevo";
             btnNewGame.UseVisualStyleBackColor = true;
-            btnNewGame.Click += btnNewGame_Click;
             // 
             // Form1
             // 
@@ -54,8 +53,6 @@
             Margin = new Padding(3, 4, 3, 4);
             Name = "Form1";
             Text = "Juego de la Galleta (Dots and Boxes)";
-            MouseClick += Form1_MouseClick;
-            MouseMove += Form1_MouseMove;
             ResumeLayout(false);
             PerformLayout();
         }

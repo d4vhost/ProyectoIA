@@ -1,11 +1,12 @@
 ﻿// Archivo: GalletaAI/Core/GalletaNode.cs
+using GalletaAI.Core;
+using SEL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using SEL;
-using GalletaAI.Core;
 
 namespace GalletaAI.Core
 {

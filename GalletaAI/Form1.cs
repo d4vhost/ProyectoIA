@@ -12,10 +12,10 @@ namespace GalletaAI
         private AILogic _aiLogic = null!;
 
         // Configuración visual
-        private const int DOT_RADIUS = 6;
-        private const int LINE_WIDTH = 4;
-        private const int MARGIN = 80;
-        private int _cellSize = 60;
+        private const int DOT_RADIUS = 8;
+        private const int LINE_WIDTH = 5;
+        private const int GRID_SIZE = 60; // Tamaño de la cuadrícula del background (más grande)
+        private int _cellSize = 120; // 2 cuadros de la cuadrícula = 1 celda del juego
 
         // Para resaltar la línea sobre la que está el mouse
         private Move? _hoveredMove = null;
@@ -28,11 +28,10 @@ namespace GalletaAI
             InitializeComponent();
             StartNewGame();
 
-            // Hacer el formulario de doble buffer para evitar parpadeo
             this.DoubleBuffered = true;
             this.Paint += Form1_Paint;
-            this.BackColor = Color.FromArgb(240, 240, 240);
-            this.ClientSize = new Size(600, 650);
+            this.BackColor = Color.FromArgb(245, 245, 245);
+            this.ClientSize = new Size(700, 750);
         }
 
         private void StartNewGame()
@@ -49,112 +48,124 @@ namespace GalletaAI
             StartNewGame();
         }
 
-        // Dibuja el tablero completo en forma de rombo escalonado
         private void Form1_Paint(object? sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-            // Dibujar fondo cuadriculado
+            int centerX = this.ClientSize.Width / 2;
+            int centerY = this.ClientSize.Height / 2 + 20;
+
+            // Solo dibujar la cuadrícula
             DrawGridBackground(g);
 
-            // Dibujar la forma de rombo escalonado
-            DrawDiamondShape(g);
+            // Comentado temporalmente para ver solo la cuadrícula
+            //DrawDiamondCorners(g, centerX, centerY);
+            //DrawDots(g, centerX, centerY);
+            //DrawGameLines(g, centerX, centerY);
 
-            // Dibujar las líneas del juego
-            DrawGameLines(g);
+            //if (_hoveredMove != null && !_aiThinking)
+            //{
+            //    DrawMove(g, _hoveredMove, new Pen(Color.FromArgb(180, 100, 149, 237), LINE_WIDTH + 3), centerX, centerY);
+            //}
 
-            // Resaltar la línea sobre la que está el mouse (solo si no está bloqueado)
-            if (_hoveredMove != null && !_aiThinking)
-            {
-                DrawMove(g, _hoveredMove, new Pen(Color.FromArgb(150, 100, 149, 237), LINE_WIDTH + 2));
-            }
-
-            // Dibujar las iniciales de los dueños de los cuadros
-            DrawSquareOwners(g);
+            //DrawSquareOwners(g, centerX, centerY);
         }
 
         private void DrawGridBackground(Graphics g)
         {
-            // Dibujar cuadrícula de fondo
-            Pen gridPen = new Pen(Color.FromArgb(50, 200, 200, 200), 1);
-            int gridSize = 20;
+            // Cuadrícula mucho más visible (casi negro)
+            Pen gridPen = new Pen(Color.FromArgb(200, 0, 0, 0), 2);
 
-            for (int x = 0; x < this.ClientSize.Width; x += gridSize)
-            {
+            for (int x = 0; x < this.ClientSize.Width; x += GRID_SIZE)
                 g.DrawLine(gridPen, x, 0, x, this.ClientSize.Height);
-            }
-            for (int y = 0; y < this.ClientSize.Height; y += gridSize)
-            {
+            for (int y = 0; y < this.ClientSize.Height; y += GRID_SIZE)
                 g.DrawLine(gridPen, 0, y, this.ClientSize.Width, y);
-            }
         }
 
-        private void DrawDiamondShape(Graphics g)
+        // AQUÍ ESTÁ LA CLAVE: Definir qué cuadros son las esquinas del rombo
+        private bool IsCornerSquare(int r, int c)
         {
-            // Dibujar el rombo escalonado con esquinas pintadas
-            int centerX = this.ClientSize.Width / 2;
-            int centerY = this.ClientSize.Height / 2 - 20;
+            // Esquina SUPERIOR: fila 0, columna 1 o 2
+            if (r == 0 && (c == 1 || c == 2)) return true;
 
-            // Calcular posiciones para el rombo escalonado
-            for (int r = 0; r <= GameState.BOARD_SIZE; r++)
+            // Esquina INFERIOR: fila 3, columna 1 o 2
+            if (r == 3 && (c == 1 || c == 2)) return true;
+
+            // Esquina IZQUIERDA: fila 1 o 2, columna 0
+            if ((r == 1 || r == 2) && c == 0) return true;
+
+            // Esquina DERECHA: fila 1 o 2, columna 3
+            if ((r == 1 || r == 2) && c == 3) return true;
+
+            return false;
+        }
+
+        private void DrawDiamondCorners(Graphics g, int centerX, int centerY)
+        {
+            // Dibujar las esquinas negras del rombo escalonado
+            for (int r = 0; r < GameState.BOARD_SIZE; r++)
             {
-                for (int c = 0; c <= GameState.BOARD_SIZE; c++)
+                for (int c = 0; c < GameState.BOARD_SIZE; c++)
                 {
-                    Point pos = GetDotPosition(r, c, centerX, centerY);
-
-                    // Dibujar cuadros completos (relleno para las esquinas negras)
-                    if (r < GameState.BOARD_SIZE && c < GameState.BOARD_SIZE)
+                    if (IsCornerSquare(r, c))
                     {
                         Point p1 = GetDotPosition(r, c, centerX, centerY);
                         Point p2 = GetDotPosition(r, c + 1, centerX, centerY);
                         Point p3 = GetDotPosition(r + 1, c + 1, centerX, centerY);
                         Point p4 = GetDotPosition(r + 1, c, centerX, centerY);
 
-                        // Pintar esquinas en negro
-                        if (IsCornerSquare(r, c))
-                        {
-                            Point[] square = { p1, p2, p3, p4 };
-                            g.FillPolygon(Brushes.Black, square);
-                        }
-                        else
-                        {
-                            // Dibujar borde suave para otros cuadros
-                            Point[] square = { p1, p2, p3, p4 };
-                            g.DrawPolygon(new Pen(Color.FromArgb(30, 0, 0, 0), 1), square);
-                        }
+                        Point[] square = { p1, p2, p3, p4 };
+                        g.FillPolygon(Brushes.Black, square);
                     }
+                }
+            }
+        }
 
-                    // Dibujar los puntos (dots)
+        private Point GetDotPosition(int row, int col, int centerX, int centerY)
+        {
+            // Alinear a la cuadrícula del background (múltiplos de GRID_SIZE)
+            // Sin desplazamientos artificiales, usar la cuadrícula natural
+
+            int x = centerX + (col - 2) * _cellSize;
+            int y = centerY + (row - 2) * _cellSize;
+
+            // Redondear a la cuadrícula más cercana
+            x = (int)Math.Round((double)x / GRID_SIZE) * GRID_SIZE;
+            y = (int)Math.Round((double)y / GRID_SIZE) * GRID_SIZE;
+
+            return new Point(x, y);
+        }
+
+        private void DrawDots(Graphics g, int centerX, int centerY)
+        {
+            for (int r = 0; r <= GameState.BOARD_SIZE; r++)
+            {
+                for (int c = 0; c <= GameState.BOARD_SIZE; c++)
+                {
+                    Point pos = GetDotPosition(r, c, centerX, centerY);
+
+                    // Sombra
+                    g.FillEllipse(new SolidBrush(Color.FromArgb(50, 0, 0, 0)),
+                        pos.X - DOT_RADIUS + 2, pos.Y - DOT_RADIUS + 2,
+                        DOT_RADIUS * 2, DOT_RADIUS * 2);
+
+                    // Punto
                     g.FillEllipse(Brushes.DarkSlateGray,
+                        pos.X - DOT_RADIUS, pos.Y - DOT_RADIUS,
+                        DOT_RADIUS * 2, DOT_RADIUS * 2);
+
+                    // Borde
+                    g.DrawEllipse(new Pen(Color.White, 2),
                         pos.X - DOT_RADIUS, pos.Y - DOT_RADIUS,
                         DOT_RADIUS * 2, DOT_RADIUS * 2);
                 }
             }
         }
 
-        private bool IsCornerSquare(int r, int c)
+        private void DrawGameLines(Graphics g, int centerX, int centerY)
         {
-            // Esquinas del tablero 4x4: (0,0), (0,3), (3,0), (3,3)
-            return (r == 0 && c == 0) || (r == 0 && c == 3) ||
-                   (r == 3 && c == 0) || (r == 3 && c == 3);
-        }
-
-        private Point GetDotPosition(int row, int col, int centerX, int centerY)
-        {
-            // Crear efecto de rombo escalonado
-            int offset = Math.Abs(2 - row) * (_cellSize / 4);
-            int x = centerX + (col - 2) * _cellSize + offset;
-            int y = centerY + (row - 2) * _cellSize;
-            return new Point(x, y);
-        }
-
-        private void DrawGameLines(Graphics g)
-        {
-            int centerX = this.ClientSize.Width / 2;
-            int centerY = this.ClientSize.Height / 2 - 20;
-
-            // Dibujar las líneas horizontales
+            // Líneas horizontales
             for (int r = 0; r <= GameState.BOARD_SIZE; r++)
             {
                 for (int c = 0; c < GameState.BOARD_SIZE; c++)
@@ -163,12 +174,18 @@ namespace GalletaAI
                     {
                         Point p1 = GetDotPosition(r, c, centerX, centerY);
                         Point p2 = GetDotPosition(r, c + 1, centerX, centerY);
+
+                        // Sombra
+                        g.DrawLine(new Pen(Color.FromArgb(50, 0, 0, 0), LINE_WIDTH),
+                            p1.X + 2, p1.Y + 2, p2.X + 2, p2.Y + 2);
+
+                        // Línea
                         g.DrawLine(new Pen(Color.CornflowerBlue, LINE_WIDTH), p1, p2);
                     }
                 }
             }
 
-            // Dibujar las líneas verticales
+            // Líneas verticales
             for (int r = 0; r < GameState.BOARD_SIZE; r++)
             {
                 for (int c = 0; c <= GameState.BOARD_SIZE; c++)
@@ -177,21 +194,27 @@ namespace GalletaAI
                     {
                         Point p1 = GetDotPosition(r, c, centerX, centerY);
                         Point p2 = GetDotPosition(r + 1, c, centerX, centerY);
+
+                        // Sombra
+                        g.DrawLine(new Pen(Color.FromArgb(50, 0, 0, 0), LINE_WIDTH),
+                            p1.X + 2, p1.Y + 2, p2.X + 2, p2.Y + 2);
+
+                        // Línea
                         g.DrawLine(new Pen(Color.CornflowerBlue, LINE_WIDTH), p1, p2);
                     }
                 }
             }
         }
 
-        private void DrawSquareOwners(Graphics g)
+        private void DrawSquareOwners(Graphics g, int centerX, int centerY)
         {
-            int centerX = this.ClientSize.Width / 2;
-            int centerY = this.ClientSize.Height / 2 - 20;
-
             for (int r = 0; r < GameState.BOARD_SIZE; r++)
             {
                 for (int c = 0; c < GameState.BOARD_SIZE; c++)
                 {
+                    // No dibujar en las esquinas del rombo
+                    if (IsCornerSquare(r, c)) continue;
+
                     Player owner = _gameState.SquareOwners[r, c];
                     if (owner != Player.None)
                     {
@@ -203,12 +226,25 @@ namespace GalletaAI
                         int centerSquareX = (p1.X + p2.X + p3.X + p4.X) / 4;
                         int centerSquareY = (p1.Y + p2.Y + p3.Y + p4.Y) / 4;
 
+                        // Fondo
+                        Point[] square = { p1, p2, p3, p4 };
+                        Color fillColor = (owner == Player.Human)
+                            ? Color.FromArgb(80, 34, 139, 34)
+                            : Color.FromArgb(80, 220, 20, 60);
+                        g.FillPolygon(new SolidBrush(fillColor), square);
+
+                        // Texto
                         string text = (owner == Player.Human) ? "H" : "IA";
                         Color color = (owner == Player.Human) ? Color.ForestGreen : Color.Crimson;
 
-                        using (Font font = new Font("Arial", 20, FontStyle.Bold))
+                        using (Font font = new Font("Arial", 24, FontStyle.Bold))
                         {
                             SizeF size = g.MeasureString(text, font);
+
+                            g.DrawString(text, font, new SolidBrush(Color.FromArgb(100, 0, 0, 0)),
+                                centerSquareX - size.Width / 2 + 2,
+                                centerSquareY - size.Height / 2 + 2);
+
                             g.DrawString(text, font, new SolidBrush(color),
                                 centerSquareX - size.Width / 2,
                                 centerSquareY - size.Height / 2);
@@ -218,11 +254,8 @@ namespace GalletaAI
             }
         }
 
-        private void DrawMove(Graphics g, Move move, Pen pen)
+        private void DrawMove(Graphics g, Move move, Pen pen, int centerX, int centerY)
         {
-            int centerX = this.ClientSize.Width / 2;
-            int centerY = this.ClientSize.Height / 2 - 20;
-
             if (move.IsHorizontal)
             {
                 Point p1 = GetDotPosition(move.Row, move.Col, centerX, centerY);
@@ -239,11 +272,11 @@ namespace GalletaAI
 
         private Move? GetMoveAtPosition(int mouseX, int mouseY)
         {
-            const int TOLERANCE = 12;
+            const int TOLERANCE = 15;
             int centerX = this.ClientSize.Width / 2;
-            int centerY = this.ClientSize.Height / 2 - 20;
+            int centerY = this.ClientSize.Height / 2 + 20;
 
-            // Revisar líneas horizontales
+            // Líneas horizontales
             for (int r = 0; r <= GameState.BOARD_SIZE; r++)
             {
                 for (int c = 0; c < GameState.BOARD_SIZE; c++)
@@ -258,7 +291,7 @@ namespace GalletaAI
                 }
             }
 
-            // Revisar líneas verticales
+            // Líneas verticales
             for (int r = 0; r < GameState.BOARD_SIZE; r++)
             {
                 for (int c = 0; c <= GameState.BOARD_SIZE; c++)
@@ -312,7 +345,6 @@ namespace GalletaAI
 
         private void Form1_MouseMove(object? sender, MouseEventArgs e)
         {
-            // No permitir hover si la IA está pensando o no es turno del humano
             if (_aiThinking || _gameState.CurrentPlayer != Player.Human || _gameState.IsGameOver())
             {
                 _hoveredMove = null;
@@ -330,37 +362,32 @@ namespace GalletaAI
 
         private async void Form1_MouseClick(object? sender, MouseEventArgs e)
         {
-            // BLOQUEAR CLICS durante turno de IA
             if (_aiThinking || _gameState.CurrentPlayer != Player.Human || _gameState.IsGameOver())
                 return;
 
             Move? move = GetMoveAtPosition(e.X, e.Y);
             if (move == null) return;
 
-            // El humano hace su movimiento
             Player nextPlayer = _gameState.ApplyMove(move);
             UpdateStatus();
             this.Invalidate();
 
-            // Si el humano completó un cuadro, sigue su turno
             if (nextPlayer == Player.Human)
                 return;
 
-            // Verificar si el juego terminó
             if (_gameState.IsGameOver())
             {
                 ShowGameOver();
                 return;
             }
 
-            // Turno de la IA - BLOQUEAR INTERACCIÓN
             await Task.Delay(300);
             await AITurn();
         }
 
         private async Task AITurn()
         {
-            _aiThinking = true; // ACTIVAR BLOQUEO
+            _aiThinking = true;
             this.Cursor = Cursors.WaitCursor;
 
             while (_gameState.CurrentPlayer == Player.AI && !_gameState.IsGameOver())
@@ -384,7 +411,7 @@ namespace GalletaAI
                     break;
             }
 
-            _aiThinking = false; // DESACTIVAR BLOQUEO
+            _aiThinking = false;
             this.Cursor = Cursors.Default;
             UpdateStatus();
 
