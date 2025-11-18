@@ -3,8 +3,32 @@
   "WorkspaceRootPath": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}|OchoPuzzle\\OchoPuzzle.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\ochopuzzle\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}|OchoPuzzle\\OchoPuzzle.csproj|solutionrelative:ochopuzzle\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+      "AbsoluteMoniker": "D:0:0:{02A75359-23CF-4E52-902F-0C8364BFAD96}|Sudoku\\Sudoku.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\sudoku\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{02A75359-23CF-4E52-902F-0C8364BFAD96}|Sudoku\\Sudoku.csproj|solutionrelative:sudoku\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{02A75359-23CF-4E52-902F-0C8364BFAD96}|Sudoku\\Sudoku.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\sudoku\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{02A75359-23CF-4E52-902F-0C8364BFAD96}|Sudoku\\Sudoku.csproj|solutionrelative:sudoku\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{02A75359-23CF-4E52-902F-0C8364BFAD96}|Sudoku\\Sudoku.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\sudoku\\core\\sudokusolver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{02A75359-23CF-4E52-902F-0C8364BFAD96}|Sudoku\\Sudoku.csproj|solutionrelative:sudoku\\core\\sudokusolver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{02A75359-23CF-4E52-902F-0C8364BFAD96}|Sudoku\\Sudoku.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\sudoku\\core\\sudokunode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{02A75359-23CF-4E52-902F-0C8364BFAD96}|Sudoku\\Sudoku.csproj|solutionrelative:sudoku\\core\\sudokunode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{02A75359-23CF-4E52-902F-0C8364BFAD96}|Sudoku\\Sudoku.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\sudoku\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{02A75359-23CF-4E52-902F-0C8364BFAD96}|Sudoku\\Sudoku.csproj|solutionrelative:sudoku\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}|OchoPuzzle\\OchoPuzzle.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\ochopuzzle\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}|OchoPuzzle\\OchoPuzzle.csproj|solutionrelative:ochopuzzle\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A53913F-8B21-42D0-A780-C94590736CCF}|OchoReinasSolver\\OchoReinasSolver.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\ochoreinassolver\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A53913F-8B21-42D0-A780-C94590736CCF}|OchoReinasSolver\\OchoReinasSolver.csproj|solutionrelative:ochoreinassolver\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,18 +38,96 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Form1.cs [Dise\u00F1o]",
-              "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoPuzzle\\Form1.cs",
-              "RelativeDocumentMoniker": "OchoPuzzle\\Form1.cs",
-              "ToolTip": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoPuzzle\\Form1.cs [Dise\u00F1o]",
-              "RelativeToolTip": "OchoPuzzle\\Form1.cs [Dise\u00F1o]",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\Sudoku\\Program.cs",
+              "RelativeDocumentMoniker": "Sudoku\\Program.cs",
+              "ToolTip": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\Sudoku\\Program.cs",
+              "RelativeToolTip": "Sudoku\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-18T12:05:38.83Z",
+              "WhenOpened": "2025-11-18T12:41:54.545Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoPuzzle\\Program.cs",
+              "RelativeDocumentMoniker": "OchoPuzzle\\Program.cs",
+              "ToolTip": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoPuzzle\\Program.cs",
+              "RelativeToolTip": "OchoPuzzle\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T12:41:48.395Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoReinasSolver\\Program.cs",
+              "RelativeDocumentMoniker": "OchoReinasSolver\\Program.cs",
+              "ToolTip": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoReinasSolver\\Program.cs",
+              "RelativeToolTip": "OchoReinasSolver\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T12:41:23.856Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "SudokuSolver.cs",
+              "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\Sudoku\\Core\\SudokuSolver.cs",
+              "RelativeDocumentMoniker": "Sudoku\\Core\\SudokuSolver.cs",
+              "ToolTip": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\Sudoku\\Core\\SudokuSolver.cs",
+              "RelativeToolTip": "Sudoku\\Core\\SudokuSolver.cs",
+              "ViewState": "AgIAAD4AAAAAAAAAAAAiwFQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T12:39:44.034Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "SudokuNode.cs",
+              "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\Sudoku\\Core\\SudokuNode.cs",
+              "RelativeDocumentMoniker": "Sudoku\\Core\\SudokuNode.cs",
+              "ToolTip": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\Sudoku\\Core\\SudokuNode.cs",
+              "RelativeToolTip": "Sudoku\\Core\\SudokuNode.cs",
+              "ViewState": "AgIAAGoAAAAAAAAAAAAiwIAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T12:39:29.168Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\Sudoku\\Form1.cs",
+              "RelativeDocumentMoniker": "Sudoku\\Form1.cs",
+              "ToolTip": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\Sudoku\\Form1.cs",
+              "RelativeToolTip": "Sudoku\\Form1.cs",
+              "ViewState": "AgIAAJkAAAAAAAAAAAAUwKYAAAA2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T12:37:26.92Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Form1.cs [Dise\u00F1o]",
+              "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\Sudoku\\Form1.cs",
+              "RelativeDocumentMoniker": "Sudoku\\Form1.cs",
+              "ToolTip": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\Sudoku\\Form1.cs [Dise\u00F1o]",
+              "RelativeToolTip": "Sudoku\\Form1.cs [Dise\u00F1o]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T12:37:23.563Z",
               "EditorCaption": " [Dise\u00F1o]"
             }
           ]
