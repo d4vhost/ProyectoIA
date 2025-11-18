@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GalletaAI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b8e95004602b16d129870b2cfc3a978949f320c5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0350280d569cd1bdc67b3f6c35ba648e3e0ff1ca")]
 [assembly: System.Reflection.AssemblyProductAttribute("GalletaAI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GalletaAI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

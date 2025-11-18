@@ -54,7 +54,7 @@
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Juego de la Galleta (Dots and Boxes)";
-            WindowState = FormWindowState.Maximized;
+            Load += Form1_Load_1;
             ResumeLayout(false);
             PerformLayout();
         }

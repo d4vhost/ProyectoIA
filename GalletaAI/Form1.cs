@@ -3,6 +3,8 @@ using GalletaAI.Core;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace GalletaAI
 {
@@ -11,24 +13,23 @@ namespace GalletaAI
         private GameState _gameState = null!;
         private AILogic _aiLogic = null!;
 
-        // Configuración visual
-        private const int LINE_WIDTH = 5;
-        private const int GRID_SIZE = 60; // Tamaño de la cuadrícula del background
+        private const int LINE_WIDTH = 4;
+        private const int GRID_SIZE = 40;
+        private const int DOT_SIZE = 6;
 
-        // *** CAMBIO CLAVE 1: _cellSize ahora coincide con GRID_SIZE ***
-        private int _cellSize = 60; // 1 cuadro de la cuadrícula = 1 celda del juego
-
-        // Para resaltar la línea sobre la que está el mouse
         private Move? _hoveredMove = null;
-
-        // Bandera para bloquear interacción durante turno de IA
         private bool _aiThinking = false;
 
-        // *** CAMBIO CLAVE 2: Pinceles para los jugadores ***
         private Pen _humanPen = new Pen(Color.CornflowerBlue, LINE_WIDTH);
         private Pen _aiPen = new Pen(Color.Crimson, LINE_WIDTH);
-        private Pen _shadowPen = new Pen(Color.FromArgb(50, 0, 0, 0), LINE_WIDTH);
+        private Pen _hoverPen = new Pen(Color.FromArgb(180, 100, 149, 237), LINE_WIDTH + 2);
+        private Pen _initialPatternPen = new Pen(Color.FromArgb(60, 60, 60), LINE_WIDTH);
 
+        private Dictionary<string, Player> _lineOwners = new Dictionary<string, Player>();
+        private HashSet<string> _initialPatternLines = new HashSet<string>();
+
+        // IMPORTANTE: HashSet estático compartido con GameState
+        public static HashSet<string> PlayableLines = new HashSet<string>();
 
         public Form1()
         {
@@ -49,10 +50,123 @@ namespace GalletaAI
         private void StartNewGame()
         {
             _gameState = new GameState();
-            _aiLogic = new AILogic(depthBound: 6);
+            _aiLogic = new AILogic(depthBound: 3);
             _aiThinking = false;
-            lblStatus.Text = $"Humano: {_gameState.HumanScore} | IA: {_gameState.AIScore}";
+            _lineOwners.Clear();
+            _initialPatternLines.Clear();
+            PlayableLines.Clear();
+
+            DefinePlayableArea();
+            DrawInitialPattern();
+
+            UpdateStatus();
             this.Invalidate();
+        }
+
+        private void DefinePlayableArea()
+        {
+            var playableSquares = new List<(int row, int col)>
+            {
+                (1, 6),
+                (2, 5), (2, 6), (2, 7),
+                (3, 4), (3, 5), (3, 6), (3, 7), (3, 8),
+                (4, 3), (4, 4), (4, 5), (4, 6), (4, 7), (4, 8), (4, 9),
+                (5, 2), (5, 3), (5, 4), (5, 5), (5, 6), (5, 7), (5, 8), (5, 9), (5, 10),
+                (6, 1), (6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7), (6, 8), (6, 9), (6, 10), (6, 11),
+                (7, 2), (7, 3), (7, 4), (7, 5), (7, 6), (7, 7), (7, 8), (7, 9), (7, 10),
+                (8, 3), (8, 4), (8, 5), (8, 6), (8, 7), (8, 8), (8, 9),
+                (9, 4), (9, 5), (9, 6), (9, 7), (9, 8),
+                (10, 5), (10, 6), (10, 7),
+                (11, 6)
+            };
+
+            foreach (var (row, col) in playableSquares)
+            {
+                PlayableLines.Add($"H_{row}_{col}");
+                PlayableLines.Add($"H_{row + 1}_{col}");
+                PlayableLines.Add($"V_{row}_{col}");
+                PlayableLines.Add($"V_{row}_{col + 1}");
+            }
+        }
+
+        private bool IsLinePlayable(Move move)
+        {
+            string key = move.IsHorizontal ? $"H_{move.Row}_{move.Col}" : $"V_{move.Row}_{move.Col}";
+            return PlayableLines.Contains(key);
+        }
+
+        private void DrawInitialPattern()
+        {
+            // ✅ Marcar las 4 esquinas como NO JUGABLES antes de dibujar el patrón
+            var cornerSquares = new HashSet<(int, int)> { (1, 6), (6, 1), (6, 11), (11, 6) };
+
+            foreach (var (row, col) in cornerSquares)
+            {
+                _gameState.MarkCornerAsNonPlayable(row, col);
+            }
+
+            ApplyInitialMove(new Move(false, 1, 7));
+            ApplyInitialMove(new Move(true, 2, 7));
+            ApplyInitialMove(new Move(false, 2, 8));
+            ApplyInitialMove(new Move(true, 3, 8));
+            ApplyInitialMove(new Move(false, 3, 9));
+            ApplyInitialMove(new Move(true, 4, 9));
+            ApplyInitialMove(new Move(false, 4, 10));
+            ApplyInitialMove(new Move(true, 5, 10));
+            ApplyInitialMove(new Move(false, 5, 11));
+            ApplyInitialMove(new Move(true, 6, 11));
+            ApplyInitialMove(new Move(false, 6, 12));
+
+            ApplyInitialMove(new Move(true, 7, 11));
+            ApplyInitialMove(new Move(false, 7, 11));
+            ApplyInitialMove(new Move(true, 8, 10));
+            ApplyInitialMove(new Move(false, 8, 10));
+            ApplyInitialMove(new Move(true, 9, 9));
+            ApplyInitialMove(new Move(false, 9, 9));
+            ApplyInitialMove(new Move(true, 10, 8));
+            ApplyInitialMove(new Move(false, 10, 8));
+            ApplyInitialMove(new Move(true, 11, 7));
+            ApplyInitialMove(new Move(false, 11, 7));
+            ApplyInitialMove(new Move(true, 12, 6));
+
+            ApplyInitialMove(new Move(false, 11, 6));
+            ApplyInitialMove(new Move(true, 11, 5));
+            ApplyInitialMove(new Move(false, 10, 5));
+            ApplyInitialMove(new Move(true, 10, 4));
+            ApplyInitialMove(new Move(false, 9, 4));
+            ApplyInitialMove(new Move(true, 9, 3));
+            ApplyInitialMove(new Move(false, 8, 3));
+            ApplyInitialMove(new Move(true, 8, 2));
+            ApplyInitialMove(new Move(false, 7, 2));
+            ApplyInitialMove(new Move(true, 7, 1));
+            ApplyInitialMove(new Move(false, 6, 1));
+
+            ApplyInitialMove(new Move(true, 6, 1));
+            ApplyInitialMove(new Move(false, 5, 2));
+            ApplyInitialMove(new Move(true, 5, 2));
+            ApplyInitialMove(new Move(false, 4, 3));
+            ApplyInitialMove(new Move(true, 4, 3));
+            ApplyInitialMove(new Move(false, 3, 4));
+            ApplyInitialMove(new Move(true, 3, 4));
+            ApplyInitialMove(new Move(false, 2, 5));
+            ApplyInitialMove(new Move(true, 2, 5));
+            ApplyInitialMove(new Move(false, 1, 6));
+            ApplyInitialMove(new Move(true, 1, 6));
+
+            ApplyInitialMove(new Move(true, 2, 6));
+            ApplyInitialMove(new Move(false, 1, 6));
+            ApplyInitialMove(new Move(false, 6, 11));
+            ApplyInitialMove(new Move(true, 11, 6));
+            ApplyInitialMove(new Move(false, 11, 7));
+            ApplyInitialMove(new Move(false, 6, 2));
+        }
+
+        private void ApplyInitialMove(Move move)
+        {
+            _gameState.ApplyInitialMove(move);
+            string key = move.IsHorizontal ? $"H_{move.Row}_{move.Col}" : $"V_{move.Row}_{move.Col}";
+            _initialPatternLines.Add(key);
+            _lineOwners[key] = Player.Human;
         }
 
         private void btnNewGame_Click(object? sender, EventArgs e)
@@ -65,188 +179,141 @@ namespace GalletaAI
             Graphics g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-            int centerX = this.ClientSize.Width / 2;
-            int centerY = this.ClientSize.Height / 2 + 20;
+            int totalWidth = 13 * GRID_SIZE;
+            int totalHeight = 13 * GRID_SIZE;
+            int offsetX = (this.ClientSize.Width - totalWidth) / 2;
+            int offsetY = (this.ClientSize.Height - totalHeight) / 2 + 20;
 
-            // Dibujar la cuadrícula de fondo
-            DrawGridBackground(g);
+            DrawGridBackground(g, offsetX, offsetY);
+            DrawGameDots(g, offsetX, offsetY);
+            DrawGameLines(g, offsetX, offsetY);
 
-            // Dibujar el diamante pixelado (bordes) y los puntos de las esquinas interiores
-            DrawPixelatedDiamond(g, centerX, centerY);
-
-            // Dibujar las líneas del juego
-            DrawGameLines(g, centerX, centerY);
-
-            // Dibujar la línea resaltada (hover)
-            if (_hoveredMove != null && !_aiThinking)
+            if (_hoveredMove != null && !_aiThinking && _gameState.CurrentPlayer == Player.Human && IsLinePlayable(_hoveredMove))
             {
-                DrawMove(g, _hoveredMove, new Pen(Color.FromArgb(180, 100, 149, 237), LINE_WIDTH + 3), centerX, centerY);
+                DrawMove(g, _hoveredMove, _hoverPen, offsetX, offsetY);
             }
 
-            // Dibujar los dueños de los cuadros
-            DrawSquareOwners(g, centerX, centerY);
+            DrawSquareOwners(g, offsetX, offsetY);
         }
 
-        private void DrawGridBackground(Graphics g)
+        private void DrawGridBackground(Graphics g, int offsetX, int offsetY)
         {
-            // Cuadrícula de fondo
             Pen gridPen = new Pen(Color.FromArgb(200, 220, 220, 220), 1);
 
-            for (int x = 0; x < this.ClientSize.Width; x += GRID_SIZE)
-                g.DrawLine(gridPen, x, 0, x, this.ClientSize.Height);
-            for (int y = 0; y < this.ClientSize.Height; y += GRID_SIZE)
-                g.DrawLine(gridPen, 0, y, this.ClientSize.Width, y);
-        }
-
-        private void DrawPixelatedDiamond(Graphics g, int centerX, int centerY)
-        {
-            // Tamaño del pixel en la cuadrícula
-            int pixelSize = GRID_SIZE;
-
-            // Definir el patrón del diamante
-            int[][] diamondPattern = new int[][]
+            for (int i = 0; i < 14; i++)
             {
-                new int[] {0, 1},     // Fila 0: 1 pixel (esquina superior)
-                new int[] {-1, 2},    // Fila 1: 3 pixels
-                new int[] {-2, 3},    // Fila 2: 5 pixels
-                new int[] {-3, 4},    // Fila 3: 7 pixels
-                new int[] {-4, 5},    // Fila 4: 9 pixels
-                new int[] {-5, 6},    // Fila 5: 11 pixels
-                new int[] {-6, 7},    // Fila 6: 13 pixels
-                new int[] {-7, 8},    // Fila 7: 15 pixels
-                new int[] {-8, 9},    // Fila 8: 17 pixels (centro)
-                new int[] {-7, 8},    // Fila 9: 15 pixels
-                new int[] {-6, 7},    // Fila 10: 13 pixels
-                new int[] {-5, 6},    // Fila 11: 11 pixels
-                new int[] {-4, 5},    // Fila 12: 9 pixels
-                new int[] {-3, 4},    // Fila 13: 7 pixels
-                new int[] {-2, 3},    // Fila 14: 5 pixels
-                new int[] {-1, 2},    // Fila 15: 3 pixels
-                new int[] {0, 1}      // Fila 16: 1 pixel (esquina inferior)
-            };
+                int x = offsetX + i * GRID_SIZE;
+                g.DrawLine(gridPen, x, offsetY, x, offsetY + 13 * GRID_SIZE);
 
-            int startY = centerY - (diamondPattern.Length * pixelSize / 2);
+                int y = offsetY + i * GRID_SIZE;
+                g.DrawLine(gridPen, offsetX, y, offsetX + 13 * GRID_SIZE, y);
+            }
 
-            Pen borderPen = new Pen(Color.Black, 4);
+            Brush dotBrush = new SolidBrush(Color.FromArgb(180, 200, 200, 200));
+            int smallDotSize = 3;
 
-            // --- Para los puntos de las esquinas ---
-            Brush dotBrush = Brushes.Black;
-            int dotSize = 6; // Un punto un poco más grande
-            int dotRadius = dotSize / 2; // Para centrar el punto en la esquina
-            // --- Fin ---
-
-            for (int row = 0; row < diamondPattern.Length; row++)
+            for (int row = 0; row < 14; row++)
             {
-                int startCol = diamondPattern[row][0];
-                int endCol = diamondPattern[row][1];
-
-                int y = startY + (row * pixelSize);
-
-                for (int col = startCol; col < endCol; col++)
+                for (int col = 0; col < 14; col++)
                 {
-                    int x = centerX + (col * pixelSize);
-
-                    bool isLeftEdge = (col == startCol);
-                    bool isRightEdge = (col == endCol - 1);
-                    bool isTopCorner = (row == 0 && col == 0);
-                    bool isBottomCorner = (row == diamondPattern.Length - 1 && col == 0);
-
-                    if (isLeftEdge || isRightEdge || isTopCorner || isBottomCorner)
-                    {
-                        // Rellenar el cuadrado de negro (BORDE)
-                        using (SolidBrush brush = new SolidBrush(Color.Black))
-                        {
-                            g.FillRectangle(brush, x, y, pixelSize, pixelSize);
-                        }
-
-                        // Dibujar el borde del pixel
-                        g.DrawRectangle(borderPen, x, y, pixelSize, pixelSize);
-                    }
-                    else
-                    {
-                        // *** Dibujar 4 puntos en las esquinas ***
-
-                        // Esquina Superior Izquierda (x, y)
-                        g.FillEllipse(dotBrush, x - dotRadius, y - dotRadius, dotSize, dotSize);
-
-                        // Esquina Superior Derecha (x + pixelSize, y)
-                        g.FillEllipse(dotBrush, x + pixelSize - dotRadius, y - dotRadius, dotSize, dotSize);
-
-                        // Esquina Inferior Izquierda (x, y + pixelSize)
-                        g.FillEllipse(dotBrush, x - dotRadius, y + pixelSize - dotRadius, dotSize, dotSize);
-
-                        // Esquina Inferior Derecha (x + pixelSize, y + pixelSize)
-                        g.FillEllipse(dotBrush, x + pixelSize - dotRadius, y + pixelSize - dotRadius, dotSize, dotSize);
-                    }
+                    int x = offsetX + col * GRID_SIZE;
+                    int y = offsetY + row * GRID_SIZE;
+                    g.FillEllipse(dotBrush, x - smallDotSize / 2, y - smallDotSize / 2, smallDotSize, smallDotSize);
                 }
             }
         }
 
-        private Point GetDotPosition(int row, int col, int centerX, int centerY)
+        private void DrawGameDots(Graphics g, int offsetX, int offsetY)
         {
-            // Esta lógica ahora usa _cellSize = 60
-            int x = centerX + (col - 2) * _cellSize;
-            int y = centerY + (row - 2) * _cellSize;
+            Brush gameDotBrush = new SolidBrush(Color.FromArgb(100, 100, 100));
 
-            // Redondear a la cuadrícula más cercana
-            x = (int)Math.Round((double)x / GRID_SIZE) * GRID_SIZE;
-            y = (int)Math.Round((double)y / GRID_SIZE) * GRID_SIZE;
+            for (int row = 0; row <= GameState.BOARD_SIZE; row++)
+            {
+                for (int col = 0; col <= GameState.BOARD_SIZE; col++)
+                {
+                    Point p = GetDotPosition(row, col, offsetX, offsetY);
+                    g.FillEllipse(gameDotBrush, p.X - DOT_SIZE / 2, p.Y - DOT_SIZE / 2, DOT_SIZE, DOT_SIZE);
+                }
+            }
+        }
 
+        private Point GetDotPosition(int row, int col, int offsetX, int offsetY)
+        {
+            int x = offsetX + col * GRID_SIZE;
+            int y = offsetY + row * GRID_SIZE;
             return new Point(x, y);
         }
 
-        private void DrawGameLines(Graphics g, int centerX, int centerY)
+        private void DrawGameLines(Graphics g, int offsetX, int offsetY)
         {
-            // Líneas horizontales
             for (int r = 0; r <= GameState.BOARD_SIZE; r++)
             {
                 for (int c = 0; c < GameState.BOARD_SIZE; c++)
                 {
-                    bool isDrawn = _gameState.HorizontalLines[r, c];
-                    if (isDrawn)
+                    if (_gameState.HorizontalLines[r, c])
                     {
-                        Point p1 = GetDotPosition(r, c, centerX, centerY);
-                        Point p2 = GetDotPosition(r, c + 1, centerX, centerY);
+                        Point p1 = GetDotPosition(r, c, offsetX, offsetY);
+                        Point p2 = GetDotPosition(r, c + 1, offsetX, offsetY);
 
-                        // Elegir un pen para líneas ya dibujadas (por ejemplo _humanPen)
-                        // O crear un pen neutro como _drawnPen si quieres un solo color
-                        Pen penToUse = _humanPen;
+                        string key = $"H_{r}_{c}";
 
-                        // Sombra
-                        g.DrawLine(_shadowPen, p1.X + 2, p1.Y + 2, p2.X + 2, p2.Y + 2);
+                        Pen penToUse;
+                        if (_initialPatternLines.Contains(key))
+                        {
+                            penToUse = _initialPatternPen;
+                        }
+                        else if (_lineOwners.ContainsKey(key) && _lineOwners[key] == Player.AI)
+                        {
+                            penToUse = _aiPen;
+                        }
+                        else
+                        {
+                            penToUse = _humanPen;
+                        }
 
-                        // Línea
                         g.DrawLine(penToUse, p1, p2);
                     }
                 }
             }
 
-            // Líneas verticales
             for (int r = 0; r < GameState.BOARD_SIZE; r++)
             {
                 for (int c = 0; c <= GameState.BOARD_SIZE; c++)
                 {
-                    bool isDrawn = _gameState.VerticalLines[r, c];
-                    if (isDrawn)
+                    if (_gameState.VerticalLines[r, c])
                     {
-                        Point p1 = GetDotPosition(r, c, centerX, centerY);
-                        Point p2 = GetDotPosition(r + 1, c, centerX, centerY);
+                        Point p1 = GetDotPosition(r, c, offsetX, offsetY);
+                        Point p2 = GetDotPosition(r + 1, c, offsetX, offsetY);
 
-                        Pen penToUse = _humanPen;
+                        string key = $"V_{r}_{c}";
 
-                        // Sombra
-                        g.DrawLine(_shadowPen, p1.X + 2, p1.Y + 2, p2.X + 2, p2.Y + 2);
+                        Pen penToUse;
+                        if (_initialPatternLines.Contains(key))
+                        {
+                            penToUse = _initialPatternPen;
+                        }
+                        else if (_lineOwners.ContainsKey(key) && _lineOwners[key] == Player.AI)
+                        {
+                            penToUse = _aiPen;
+                        }
+                        else
+                        {
+                            penToUse = _humanPen;
+                        }
 
-                        // Línea
                         g.DrawLine(penToUse, p1, p2);
                     }
                 }
             }
         }
 
-
-        private void DrawSquareOwners(Graphics g, int centerX, int centerY)
+        private void DrawSquareOwners(Graphics g, int offsetX, int offsetY)
         {
+            var initialCornerSquares = new HashSet<(int, int)>
+            {
+                (1, 6), (6, 1), (6, 11), (11, 6)
+            };
+
             for (int r = 0; r < GameState.BOARD_SIZE; r++)
             {
                 for (int c = 0; c < GameState.BOARD_SIZE; c++)
@@ -254,54 +321,66 @@ namespace GalletaAI
                     Player owner = _gameState.SquareOwners[r, c];
                     if (owner != Player.None)
                     {
-                        Point p1 = GetDotPosition(r, c, centerX, centerY);
-                        Point p2 = GetDotPosition(r, c + 1, centerX, centerY);
-                        Point p3 = GetDotPosition(r + 1, c + 1, centerX, centerY);
-                        Point p4 = GetDotPosition(r + 1, c, centerX, centerY);
+                        Point p1 = GetDotPosition(r, c, offsetX, offsetY);
+                        Point p2 = GetDotPosition(r, c + 1, offsetX, offsetY);
+                        Point p3 = GetDotPosition(r + 1, c + 1, offsetX, offsetY);
+                        Point p4 = GetDotPosition(r + 1, c, offsetX, offsetY);
 
-                        int centerSquareX = (p1.X + p2.X + p3.X + p4.X) / 4;
-                        int centerSquareY = (p1.Y + p2.Y + p3.Y + p4.Y) / 4;
-
-                        // Fondo
                         Point[] square = { p1, p2, p3, p4 };
-                        Color fillColor = (owner == Player.Human)
-                            ? Color.FromArgb(80, 34, 139, 34)
-                            : Color.FromArgb(80, 220, 20, 60);
-                        g.FillPolygon(new SolidBrush(fillColor), square);
 
-                        // Texto
-                        string text = (owner == Player.Human) ? "H" : "IA";
-                        Color color = (owner == Player.Human) ? Color.ForestGreen : Color.Crimson;
+                        bool isInitialCorner = initialCornerSquares.Contains((r, c));
 
-                        using (Font font = new Font("Arial", 24, FontStyle.Bold))
+                        if (isInitialCorner)
                         {
-                            SizeF size = g.MeasureString(text, font);
+                            Color fillColor = Color.FromArgb(60, 60, 60);
+                            g.FillPolygon(new SolidBrush(fillColor), square);
+                        }
+                        else
+                        {
+                            Color fillColor;
+                            string letter;
 
-                            g.DrawString(text, font, new SolidBrush(Color.FromArgb(100, 0, 0, 0)),
-                                centerSquareX - size.Width / 2 + 2,
-                                centerSquareY - size.Height / 2 + 2);
+                            if (owner == Player.Human)
+                            {
+                                fillColor = Color.FromArgb(173, 216, 230);
+                                letter = "H";
+                            }
+                            else
+                            {
+                                fillColor = Color.FromArgb(255, 160, 160);
+                                letter = "IA";
+                            }
 
-                            g.DrawString(text, font, new SolidBrush(color),
-                                centerSquareX - size.Width / 2,
-                                centerSquareY - size.Height / 2);
+                            g.FillPolygon(new SolidBrush(fillColor), square);
+
+                            int centerX = (p1.X + p3.X) / 2;
+                            int centerY = (p1.Y + p3.Y) / 2;
+
+                            Font font = new Font("Arial", owner == Player.AI ? 12 : 16, FontStyle.Bold);
+                            SizeF textSize = g.MeasureString(letter, font);
+
+                            float textX = centerX - textSize.Width / 2;
+                            float textY = centerY - textSize.Height / 2;
+
+                            g.DrawString(letter, font, Brushes.White, textX, textY);
                         }
                     }
                 }
             }
         }
 
-        private void DrawMove(Graphics g, Move move, Pen pen, int centerX, int centerY)
+        private void DrawMove(Graphics g, Move move, Pen pen, int offsetX, int offsetY)
         {
             if (move.IsHorizontal)
             {
-                Point p1 = GetDotPosition(move.Row, move.Col, centerX, centerY);
-                Point p2 = GetDotPosition(move.Row, move.Col + 1, centerX, centerY);
+                Point p1 = GetDotPosition(move.Row, move.Col, offsetX, offsetY);
+                Point p2 = GetDotPosition(move.Row, move.Col + 1, offsetX, offsetY);
                 g.DrawLine(pen, p1, p2);
             }
             else
             {
-                Point p1 = GetDotPosition(move.Row, move.Col, centerX, centerY);
-                Point p2 = GetDotPosition(move.Row + 1, move.Col, centerX, centerY);
+                Point p1 = GetDotPosition(move.Row, move.Col, offsetX, offsetY);
+                Point p2 = GetDotPosition(move.Row + 1, move.Col, offsetX, offsetY);
                 g.DrawLine(pen, p1, p2);
             }
         }
@@ -309,39 +388,43 @@ namespace GalletaAI
         private Move? GetMoveAtPosition(int mouseX, int mouseY)
         {
             const int TOLERANCE = 15;
-            int centerX = this.ClientSize.Width / 2;
-            int centerY = this.ClientSize.Height / 2 + 20;
 
-            // Líneas horizontales
+            int totalWidth = 13 * GRID_SIZE;
+            int totalHeight = 13 * GRID_SIZE;
+            int offsetX = (this.ClientSize.Width - totalWidth) / 2;
+            int offsetY = (this.ClientSize.Height - totalHeight) / 2 + 20;
+
             for (int r = 0; r <= GameState.BOARD_SIZE; r++)
             {
                 for (int c = 0; c < GameState.BOARD_SIZE; c++)
                 {
-                    // *** CAMBIO: Comprobar si la línea está vacía (None) ***
                     if (_gameState.HorizontalLines[r, c]) continue;
 
+                    Move move = new Move(true, r, c);
+                    if (!IsLinePlayable(move)) continue;
 
-                    Point p1 = GetDotPosition(r, c, centerX, centerY);
-                    Point p2 = GetDotPosition(r, c + 1, centerX, centerY);
+                    Point p1 = GetDotPosition(r, c, offsetX, offsetY);
+                    Point p2 = GetDotPosition(r, c + 1, offsetX, offsetY);
 
                     if (IsPointNearLine(mouseX, mouseY, p1, p2, TOLERANCE))
-                        return new Move(true, r, c);
+                        return move;
                 }
             }
 
-            // Líneas verticales
             for (int r = 0; r < GameState.BOARD_SIZE; r++)
             {
                 for (int c = 0; c <= GameState.BOARD_SIZE; c++)
                 {
-                    // *** CAMBIO: Comprobar si la línea está vacía (None) ***
                     if (_gameState.VerticalLines[r, c]) continue;
 
-                    Point p1 = GetDotPosition(r, c, centerX, centerY);
-                    Point p2 = GetDotPosition(r + 1, c, centerX, centerY);
+                    Move move = new Move(false, r, c);
+                    if (!IsLinePlayable(move)) continue;
+
+                    Point p1 = GetDotPosition(r, c, offsetX, offsetY);
+                    Point p2 = GetDotPosition(r + 1, c, offsetX, offsetY);
 
                     if (IsPointNearLine(mouseX, mouseY, p1, p2, TOLERANCE))
-                        return new Move(false, r, c);
+                        return move;
                 }
             }
 
@@ -384,7 +467,7 @@ namespace GalletaAI
 
         private void Form1_MouseMove(object? sender, MouseEventArgs e)
         {
-            if (_aiThinking || _gameState.CurrentPlayer != Player.Human || _gameState.IsGameOver())
+            if (_gameState.IsGameOver() || _aiThinking || _gameState.CurrentPlayer != Player.Human)
             {
                 _hoveredMove = null;
                 this.Invalidate();
@@ -401,18 +484,22 @@ namespace GalletaAI
 
         private async void Form1_MouseClick(object? sender, MouseEventArgs e)
         {
-            if (_aiThinking || _gameState.CurrentPlayer != Player.Human || _gameState.IsGameOver())
+            if (_gameState.IsGameOver() || _aiThinking || _gameState.CurrentPlayer != Player.Human)
                 return;
 
             Move? move = GetMoveAtPosition(e.X, e.Y);
             if (move == null) return;
 
-            Player nextPlayer = _gameState.ApplyMove(move);
+            if (!IsLinePlayable(move))
+                return;
+
+            string key = move.IsHorizontal ? $"H_{move.Row}_{move.Col}" : $"V_{move.Row}_{move.Col}";
+            _lineOwners[key] = Player.Human;
+
+            _gameState.ApplyMove(move);
+
             UpdateStatus();
             this.Invalidate();
-
-            if (nextPlayer == Player.Human)
-                return;
 
             if (_gameState.IsGameOver())
             {
@@ -420,39 +507,33 @@ namespace GalletaAI
                 return;
             }
 
-            await Task.Delay(300);
-            await AITurn();
+            if (_gameState.CurrentPlayer == Player.AI && !_gameState.IsGameOver())
+            {
+                await AITurn();
+            }
         }
 
         private async Task AITurn()
         {
             _aiThinking = true;
-            this.Cursor = Cursors.WaitCursor;
+            UpdateStatus();
+            this.Invalidate();
 
-            while (_gameState.CurrentPlayer == Player.AI && !_gameState.IsGameOver())
+            await Task.Delay(300);
+
+            Move? aiMove = _aiLogic.GetBestMove(_gameState);
+
+            if (aiMove != null)
             {
-                lblStatus.Text = "🤖 IA está pensando...";
-                lblStatus.ForeColor = Color.OrangeRed;
-                this.Invalidate();
-                await Task.Delay(100);
+                string key = aiMove.IsHorizontal ? $"H_{aiMove.Row}_{aiMove.Col}" : $"V_{aiMove.Row}_{aiMove.Col}";
+                _lineOwners[key] = Player.AI;
 
-                Move? bestMove = await Task.Run(() => _aiLogic.FindBestMove(_gameState));
-
-                if (bestMove == null) break;
-
-                Player nextPlayer = _gameState.ApplyMove(bestMove);
-                UpdateStatus();
-                this.Invalidate();
-
-                await Task.Delay(500);
-
-                if (nextPlayer != Player.AI)
-                    break;
+                _gameState.ApplyMove(aiMove);
             }
 
             _aiThinking = false;
-            this.Cursor = Cursors.Default;
             UpdateStatus();
+            this.Invalidate();
 
             if (_gameState.IsGameOver())
             {
@@ -462,26 +543,50 @@ namespace GalletaAI
 
         private void UpdateStatus()
         {
-            lblStatus.Text = $"Humano: {_gameState.HumanScore} | IA: {_gameState.AIScore}";
-            lblStatus.ForeColor = Color.Black;
+            if (_aiThinking)
+            {
+                lblStatus.Text = "La IA está pensando...";
+                lblStatus.ForeColor = Color.DarkOrange;
+            }
+            else if (_gameState.IsGameOver())
+            {
+                lblStatus.Text = $"¡Juego terminado! - H: {_gameState.HumanScore} | IA: {_gameState.AIScore}";
+                lblStatus.ForeColor = Color.Black;
+            }
+            else if (_gameState.CurrentPlayer == Player.Human)
+            {
+                lblStatus.Text = $"Tu turno - H: {_gameState.HumanScore} | IA: {_gameState.AIScore}";
+                lblStatus.ForeColor = Color.ForestGreen;
+            }
+            else
+            {
+                lblStatus.Text = $"Turno de la IA - H: {_gameState.HumanScore} | IA: {_gameState.AIScore}";
+                lblStatus.ForeColor = Color.Crimson;
+            }
         }
 
         private void ShowGameOver()
         {
+            int totalSquares = 57;
+
             string winner;
             if (_gameState.HumanScore > _gameState.AIScore)
-                winner = "¡Ganaste! 🎉";
-            // *** CORRECCIÓN DE BUG: Antes decía _gameState.AIScore > _gameState.AIScore ***
+                winner = "¡Ganaste!";
             else if (_gameState.AIScore > _gameState.HumanScore)
-                winner = "La IA ganó 🤖";
+                winner = "La IA ganó";
             else
-                winner = "¡Empate! 🤝";
+                winner = "¡Empate!";
 
-            MessageBox.Show($"{winner}\n\nPuntuación final:\nHumano: {_gameState.HumanScore}\nIA: {_gameState.AIScore}",
+            MessageBox.Show($"{winner}\n\nPuntuación final:\nTú: {_gameState.HumanScore} cuadros\nIA: {_gameState.AIScore} cuadros\n\nTotal: {totalSquares} cuadros jugables",
                 "Juego Terminado", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form1_Load_1(object sender, EventArgs e)
         {
 
         }

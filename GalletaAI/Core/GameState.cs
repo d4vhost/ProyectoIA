@@ -7,10 +7,8 @@ using System.Drawing;
 
 namespace GalletaAI.Core
 {
-    // Enum para saber quién es el dueño de una "galleta" (cuadro)
     public enum Player { None, Human, AI }
 
-    // Representa un solo movimiento (una línea dibujada)
     public class Move
     {
         public bool IsHorizontal { get; }
@@ -24,7 +22,6 @@ namespace GalletaAI.Core
             Col = col;
         }
 
-        // Para comparar movimientos
         public override bool Equals(object? obj)
         {
             if (obj is Move other)
@@ -36,12 +33,11 @@ namespace GalletaAI.Core
         public override int GetHashCode() => (IsHorizontal, Row, Col).GetHashCode();
     }
 
-    // Clase principal que almacena el estado del tablero y la lógica de reglas
     public class GameState
     {
-        public const int BOARD_SIZE = 4; // 4x4 cuadros (5x5 puntos)
+        public const int BOARD_SIZE = 13;
+        public const int TOTAL_PLAYABLE_SQUARES = 57;
 
-        // Almacenamos las líneas y los dueños de los cuadros
         public bool[,] HorizontalLines { get; private set; }
         public bool[,] VerticalLines { get; private set; }
         public Player[,] SquareOwners { get; private set; }
@@ -50,21 +46,20 @@ namespace GalletaAI.Core
         public int AIScore { get; private set; }
         public Player CurrentPlayer { get; private set; }
 
+        // ✅ Marcador de esquinas que NO cuentan para el puntaje
+        private HashSet<(int, int)> _nonPlayableCorners = new HashSet<(int, int)>();
+
         public GameState()
         {
-            // 5 filas de líneas horizontales (0 a 4), 4 columnas (0 a 3)
             HorizontalLines = new bool[BOARD_SIZE + 1, BOARD_SIZE];
-            // 4 filas de líneas verticales (0 a 3), 5 columnas (0 a 4)
             VerticalLines = new bool[BOARD_SIZE, BOARD_SIZE + 1];
-            // 4x4 cuadros
             SquareOwners = new Player[BOARD_SIZE, BOARD_SIZE];
 
             HumanScore = 0;
             AIScore = 0;
-            CurrentPlayer = Player.Human; // El humano empieza
+            CurrentPlayer = Player.Human;
         }
 
-        // Constructor para clonar el estado (esencial para el árbol de IA)
         public GameState(GameState source)
         {
             HorizontalLines = (bool[,])source.HorizontalLines.Clone();
@@ -73,49 +68,88 @@ namespace GalletaAI.Core
             HumanScore = source.HumanScore;
             AIScore = source.AIScore;
             CurrentPlayer = source.CurrentPlayer;
+            _nonPlayableCorners = new HashSet<(int, int)>(source._nonPlayableCorners);
+        }
+
+        // ✅ Método para marcar esquinas como NO contables
+        public void MarkCornerAsNonPlayable(int row, int col)
+        {
+            _nonPlayableCorners.Add((row, col));
         }
 
         public bool IsGameOver()
         {
-            return HumanScore + AIScore == BOARD_SIZE * BOARD_SIZE;
+            return HumanScore + AIScore >= TOTAL_PLAYABLE_SQUARES;
         }
 
-        // Obtiene una lista de todos los movimientos (líneas) posibles
         public List<Move> GetValidMoves()
         {
             var moves = new List<Move>();
+            var playableLines = GalletaAI.Form1.PlayableLines;
 
-            // Líneas horizontales
             for (int r = 0; r <= BOARD_SIZE; r++)
+            {
                 for (int c = 0; c < BOARD_SIZE; c++)
+                {
                     if (!HorizontalLines[r, c])
-                        moves.Add(new Move(true, r, c));
+                    {
+                        string key = $"H_{r}_{c}";
+                        if (playableLines.Contains(key))
+                        {
+                            moves.Add(new Move(true, r, c));
+                        }
+                    }
+                }
+            }
 
-            // Líneas verticales
             for (int r = 0; r < BOARD_SIZE; r++)
+            {
                 for (int c = 0; c <= BOARD_SIZE; c++)
+                {
                     if (!VerticalLines[r, c])
-                        moves.Add(new Move(false, r, c));
+                    {
+                        string key = $"V_{r}_{c}";
+                        if (playableLines.Contains(key))
+                        {
+                            moves.Add(new Move(false, r, c));
+                        }
+                    }
+                }
+            }
 
             return moves;
         }
 
-        // Aplica un movimiento y retorna el jugador del *siguiente* turno
-        // Esta es la regla más importante: si completas un cuadro, sigues jugando.
-        public Player ApplyMove(Move move)
+        // ✅ Método especial para movimientos iniciales (no cambia turno, no suma puntaje)
+        public void ApplyInitialMove(Move move)
         {
             if (move.IsHorizontal)
             {
-                if (HorizontalLines[move.Row, move.Col]) return CurrentPlayer; // Movimiento ilegal
                 HorizontalLines[move.Row, move.Col] = true;
             }
             else
             {
-                if (VerticalLines[move.Row, move.Col]) return CurrentPlayer; // Movimiento ilegal
                 VerticalLines[move.Row, move.Col] = true;
             }
 
-            int squaresCompleted = CheckForCompletedSquares(move);
+            // Completar cuadros sin sumar puntos
+            CheckForCompletedSquares(move, false);
+        }
+
+        public Player ApplyMove(Move move)
+        {
+            if (move.IsHorizontal)
+            {
+                if (HorizontalLines[move.Row, move.Col]) return CurrentPlayer;
+                HorizontalLines[move.Row, move.Col] = true;
+            }
+            else
+            {
+                if (VerticalLines[move.Row, move.Col]) return CurrentPlayer;
+                VerticalLines[move.Row, move.Col] = true;
+            }
+
+            int squaresCompleted = CheckForCompletedSquares(move, true);
 
             if (squaresCompleted > 0)
             {
@@ -123,62 +157,59 @@ namespace GalletaAI.Core
                     HumanScore += squaresCompleted;
                 else
                     AIScore += squaresCompleted;
+            }
 
-                // El jugador completó un cuadro, así que le toca de nuevo
-                return CurrentPlayer;
-            }
-            else
-            {
-                // No se completó cuadro, cambia el turno
-                CurrentPlayer = (CurrentPlayer == Player.Human) ? Player.AI : Player.Human;
-                return CurrentPlayer;
-            }
+            CurrentPlayer = (CurrentPlayer == Player.Human) ? Player.AI : Player.Human;
+            return CurrentPlayer;
         }
 
-        // Revisa si el último movimiento completó uno o dos cuadros
-        private int CheckForCompletedSquares(Move move)
+        // ✅ Modificado para NO contar esquinas negras
+        private int CheckForCompletedSquares(Move move, bool countScore)
         {
             int completed = 0;
 
             if (move.IsHorizontal)
             {
-                // Revisar cuadro de abajo (si existe)
                 if (move.Row < BOARD_SIZE)
-                    if (CheckSquare(move.Row, move.Col))
+                    if (CheckSquare(move.Row, move.Col, countScore))
                         completed++;
 
-                // Revisar cuadro de arriba (si existe)
                 if (move.Row > 0)
-                    if (CheckSquare(move.Row - 1, move.Col))
+                    if (CheckSquare(move.Row - 1, move.Col, countScore))
                         completed++;
             }
-            else // Movimiento Vertical
+            else
             {
-                // Revisar cuadro de la derecha (si existe)
                 if (move.Col < BOARD_SIZE)
-                    if (CheckSquare(move.Row, move.Col))
+                    if (CheckSquare(move.Row, move.Col, countScore))
                         completed++;
 
-                // Revisar cuadro de la izquierda (si existe)
                 if (move.Col > 0)
-                    if (CheckSquare(move.Row, move.Col - 1))
+                    if (CheckSquare(move.Row, move.Col - 1, countScore))
                         completed++;
             }
             return completed;
         }
 
-        // Revisa si un cuadro específico (r, c) está completo
-        private bool CheckSquare(int r, int c)
+        // ✅ Modificado para NO contar esquinas negras en el puntaje
+        private bool CheckSquare(int r, int c, bool countScore)
         {
-            if (SquareOwners[r, c] != Player.None) return false; // Ya tiene dueño
+            if (SquareOwners[r, c] != Player.None) return false;
 
-            if (HorizontalLines[r, c] &&   // Arriba
-                HorizontalLines[r + 1, c] && // Abajo
-                VerticalLines[r, c] &&     // Izquierda
-                VerticalLines[r, c + 1])   // Derecha
+            if (HorizontalLines[r, c] &&
+                HorizontalLines[r + 1, c] &&
+                VerticalLines[r, c] &&
+                VerticalLines[r, c + 1])
             {
-                SquareOwners[r, c] = CurrentPlayer; // Asignar dueño
-                return true;
+                SquareOwners[r, c] = CurrentPlayer;
+
+                // ✅ Si es una esquina negra, NO contarla
+                if (_nonPlayableCorners.Contains((r, c)))
+                {
+                    return false; // No suma al puntaje
+                }
+
+                return countScore; // Solo cuenta si countScore es true
             }
             return false;
         }
