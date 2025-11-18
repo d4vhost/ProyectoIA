@@ -1,7 +1,6 @@
 ﻿// Archivo: Sudoku/Core/SudokuNode.cs
 using SEL;
 using System;
-using System.Collections.Generic;
 
 namespace Sudoku.Core
 {
@@ -9,16 +8,17 @@ namespace Sudoku.Core
     {
         public int[,] Board { get; private set; }
         public SudokuNode? theParent { get; set; }
+        private (int row, int col) EmptyCell;
+        private int LastValue = 0;
 
-        private (int row, int col) NextEmptyCell;
-        private int LastAttemptedValue = 0; // Utilizado por nextSibling para reanudar la búsqueda
+        // Callback para actualizar UI
+        public static Action<int, int, int>? OnCellUpdate;
 
         public SudokuNode(int[,] board, SudokuNode? parent = null)
         {
-            // Clonar la matriz para asegurar la inmutabilidad del nodo
             Board = (int[,])board.Clone();
             theParent = parent;
-            FindNextEmptyCell(out NextEmptyCell.row, out NextEmptyCell.col);
+            EmptyCell = FindFirstEmptyCell();
         }
 
         public SudokuNode? parent
@@ -27,103 +27,115 @@ namespace Sudoku.Core
             set { theParent = value; }
         }
 
-        // **********************************************
-        // * MÉTODOS AUXILIARES DE UTILIDAD (SUDOKU)    *
-        // **********************************************
-
-        public void FindNextEmptyCell(out int r, out int c)
+        private (int row, int col) FindFirstEmptyCell()
         {
-            r = -1; c = -1;
-            for (int row = 0; row < 9; row++)
+            for (int row = 0; row < 6; row++)
             {
-                for (int col = 0; col < 9; col++)
+                for (int col = 0; col < 6; col++)
                 {
                     if (Board[row, col] == 0)
                     {
-                        r = row; c = col;
-                        return;
+                        return (row, col);
                     }
                 }
             }
+            return (-1, -1);
+        }
+
+        public bool IsGoal()
+        {
+            return EmptyCell.row == -1;
         }
 
         public static bool IsValid(int[,] board, int row, int col, int num)
         {
-            // 1. Verificar Fila
-            for (int c = 0; c < 9; c++)
-            {
+            // Verificar fila
+            for (int c = 0; c < 6; c++)
                 if (board[row, c] == num) return false;
-            }
 
-            // 2. Verificar Columna
-            for (int r = 0; r < 9; r++)
-            {
+            // Verificar columna
+            for (int r = 0; r < 6; r++)
                 if (board[r, col] == num) return false;
-            }
 
-            // 3. Verificar Bloque 3x3
-            int startRow = row - row % 3;
-            int startCol = col - col % 3;
-            for (int r = 0; r < 3; r++)
-            {
-                for (int c = 0; c < 3; c++)
-                {
-                    if (board[startRow + r, startCol + c] == num) return false;
-                }
-            }
+            // Verificar bloque 2x3
+            int startRow = (row / 2) * 2;
+            int startCol = (col / 3) * 3;
+            for (int r = startRow; r < startRow + 2; r++)
+                for (int c = startCol; c < startCol + 3; c++)
+                    if (board[r, c] == num) return false;
 
             return true;
         }
 
-        // **********************************************
-        // * MÉTODOS DE LA INTERFAZ IGNode<T> (DFS)    *
-        // **********************************************
-
-        // Extiende la solución: intenta colocar el primer número válido en la celda vacía.
         public SudokuNode? firstChild()
         {
-            if (NextEmptyCell.row == -1) return null; // Tablero lleno
+            if (EmptyCell.row == -1) return null;
 
-            for (int num = 1; num <= 9; num++)
+            int row = EmptyCell.row;
+            int col = EmptyCell.col;
+
+            for (int num = 1; num <= 6; num++)
             {
-                if (IsValid(Board, NextEmptyCell.row, NextEmptyCell.col, num))
+                // Mostrar en UI
+                OnCellUpdate?.Invoke(row, col, num);
+                System.Threading.Thread.Sleep(5);
+
+                if (IsValid(Board, row, col, num))
                 {
                     int[,] newBoard = (int[,])Board.Clone();
-                    newBoard[NextEmptyCell.row, NextEmptyCell.col] = num;
+                    newBoard[row, col] = num;
 
-                    // Almacenar el valor intentado en el nodo actual
-                    LastAttemptedValue = num;
+                    SudokuNode child = new SudokuNode(newBoard, this);
+                    child.LastValue = num;
 
-                    return new SudokuNode(newBoard, this);
+                    return child;
                 }
             }
-            return null; // No hay un hijo válido, se requiere retroceso
+
+            // No hay solución - borrar
+            OnCellUpdate?.Invoke(row, col, 0);
+            return null;
         }
 
-        // Alternativa: intenta colocar el siguiente número válido en la misma celda.
         public SudokuNode? nextSibling()
         {
-            if (theParent == null) return null; // El nodo raíz no tiene hermanos
+            if (theParent == null) return null;
 
-            // La celda a llenar es la que este nodo 'hermano' debe llenar
-            (int r, int c) cellToFill = theParent.NextEmptyCell;
+            int row = theParent.EmptyCell.row;
+            int col = theParent.EmptyCell.col;
 
-            // Continúa la búsqueda desde el último valor intentado + 1 (Backtracking)
-            for (int num = LastAttemptedValue + 1; num <= 9; num++)
+            if (row == -1) return null;
+
+            // Borrar valor anterior
+            OnCellUpdate?.Invoke(row, col, 0);
+            System.Threading.Thread.Sleep(3);
+
+            for (int num = LastValue + 1; num <= 6; num++)
             {
-                if (IsValid(theParent.Board, cellToFill.r, cellToFill.c, num))
+                // Mostrar en UI
+                OnCellUpdate?.Invoke(row, col, num);
+                System.Threading.Thread.Sleep(5);
+
+                if (IsValid(theParent.Board, row, col, num))
                 {
                     int[,] newBoard = (int[,])theParent.Board.Clone();
-                    newBoard[cellToFill.r, cellToFill.c] = num;
+                    newBoard[row, col] = num;
 
-                    // Actualizar el valor intentado en el nodo actual (para el siguiente hermano)
-                    LastAttemptedValue = num;
+                    SudokuNode sibling = new SudokuNode(newBoard, theParent);
+                    sibling.LastValue = num;
 
-                    // El hermano se crea con el mismo padre (theParent)
-                    return new SudokuNode(newBoard, theParent);
+                    return sibling;
                 }
             }
-            return null; // No hay más alternativas, la lógica de Graph retrocederá
+
+            return null;
+        }
+
+        // Implementación requerida por IGNode
+        public void FindNextEmptyCell(out int r, out int c)
+        {
+            r = EmptyCell.row;
+            c = EmptyCell.col;
         }
     }
 }

@@ -1,174 +1,274 @@
-// Archivo: Form1.cs
+ï»¿// Archivo: Sudoku/Form1.cs
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Sudoku.Core;
+using System.Threading.Tasks;
 
 namespace Sudoku
 {
     public partial class Form1 : Form
     {
-        // SOLUCIÓN A ERRORES DE ÁMBITO: Declaración explícita de los controles UI
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Button btnSolve;
-
-        private SudokuSolver _solver = new SudokuSolver();
-        private TextBox[,] _cells = new TextBox[9, 9];
+        private TextBox[,] cells = new TextBox[6, 6];
+        private Button btnSolve = null!;
+        private Button btnNew = null!;
+        private Label lblTitle = null!;
+        private Panel gridPanel = null!;
+        private SudokuSolver solver = null!;
+        private bool isSolving = false;
 
         public Form1()
         {
             InitializeComponent();
-
-            // Inicialización manual de los controles (asegura que no sean null)
-            this.tableLayoutPanel1 = new TableLayoutPanel();
-            this.btnSolve = new Button();
-            this.Controls.Add(this.tableLayoutPanel1);
-            this.Controls.Add(this.btnSolve);
-
-            InitializeSudokuGrid();
-            LoadInitialBoard();
-
-            // Conexión del evento del botón
-            this.btnSolve.Click += new System.EventHandler(this.btnSolve_Click);
+            solver = new SudokuSolver();
+            InitializeCustomComponents();
         }
 
-        // --- Inicialización y Carga de la Interfaz ---
-        private void InitializeSudokuGrid()
+        private void InitializeCustomComponents()
         {
-            // Configuración del TableLayoutPanel
-            tableLayoutPanel1.Dock = DockStyle.None;
-            tableLayoutPanel1.Location = new Point(10, 10);
-            tableLayoutPanel1.Size = new Size(500, 500);
-            tableLayoutPanel1.RowCount = 9;
-            tableLayoutPanel1.ColumnCount = 9;
+            this.Text = "Sudoku 6x6 Solver";
+            this.Size = new Size(620, 700);
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.BackColor = Color.FromArgb(245, 247, 250);
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
 
-            tableLayoutPanel1.Controls.Clear();
-            tableLayoutPanel1.SuspendLayout();
-
-            // Ajustar estilos de filas y columnas para celdas cuadradas
-            for (int i = 0; i < 9; i++)
+            // TÃ­tulo
+            lblTitle = new Label
             {
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 11.11f));
-                tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 11.11f));
-            }
+                Text = "SUDOKU",
+                Font = new Font("Segoe UI", 32, FontStyle.Bold),
+                ForeColor = Color.FromArgb(41, 128, 185),
+                AutoSize = false,
+                Size = new Size(540, 60),
+                Location = new Point(20, 15),
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+            this.Controls.Add(lblTitle);
 
-            for (int r = 0; r < 9; r++)
+            // Panel contenedor del grid
+            gridPanel = new Panel
             {
-                for (int c = 0; c < 9; c++)
+                Size = new Size(480, 480),
+                Location = new Point(50, 85),
+                BackColor = Color.FromArgb(44, 62, 80),
+                BorderStyle = BorderStyle.None
+            };
+            this.Controls.Add(gridPanel);
+
+            CreateSudokuGrid();
+
+            // BotÃ³n RESOLVER (izquierda)
+            btnSolve = new Button
+            {
+                Text = "RESOLVER",
+                Size = new Size(250, 55),
+                Location = new Point(50, 590),
+                Font = new Font("Segoe UI", 14, FontStyle.Bold),
+                ForeColor = Color.White,
+                BackColor = Color.FromArgb(46, 204, 113),
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnSolve.FlatAppearance.BorderSize = 0;
+            btnSolve.FlatAppearance.MouseOverBackColor = Color.FromArgb(39, 174, 96);
+            btnSolve.Click += BtnSolve_Click;
+            this.Controls.Add(btnSolve);
+
+            // BotÃ³n NUEVO (derecha)
+            btnNew = new Button
+            {
+                Text = "NUEVO",
+                Size = new Size(250, 55),
+                Location = new Point(310, 590),
+                Font = new Font("Segoe UI", 14, FontStyle.Bold),
+                ForeColor = Color.White,
+                BackColor = Color.FromArgb(52, 152, 219),
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnNew.FlatAppearance.BorderSize = 0;
+            btnNew.FlatAppearance.MouseOverBackColor = Color.FromArgb(41, 128, 185);
+            btnNew.Click += BtnNew_Click;
+            this.Controls.Add(btnNew);
+
+            LoadInitialBoard();
+
+            // Quitar el foco de todos los TextBox al iniciar
+            this.ActiveControl = null;
+        }
+
+        private void CreateSudokuGrid()
+        {
+            int cellSize = 78;
+            int gap = 1;
+            int bigGap = 3;
+
+            for (int row = 0; row < 6; row++)
+            {
+                for (int col = 0; col < 6; col++)
                 {
+                    int x = col * (cellSize + gap) + (col / 3) * (bigGap - gap) + 5;
+                    int y = row * (cellSize + gap) + (row / 2) * (bigGap - gap) + 5;
+
                     TextBox cell = new TextBox
                     {
-                        Tag = new Point(r, c),
-                        Text = "",
+                        Size = new Size(cellSize, cellSize),
+                        Location = new Point(x, y),
+                        Font = new Font("Segoe UI", 32, FontStyle.Bold),
                         TextAlign = HorizontalAlignment.Center,
-                        Font = new Font("Arial", 14, FontStyle.Bold),
-                        Margin = new Padding(1),
-                        Dock = DockStyle.Fill
+                        MaxLength = 1,
+                        BorderStyle = BorderStyle.FixedSingle,
+                        BackColor = Color.White,
+                        ForeColor = Color.FromArgb(44, 62, 80),
+                        TabStop = false
                     };
 
-                    // Separadores visuales para bloques 3x3
-                    if (r % 3 == 0 && r != 0) cell.BorderStyle = BorderStyle.Fixed3D;
-                    if (c % 3 == 0 && c != 0) cell.BorderStyle = BorderStyle.Fixed3D;
+                    cell.KeyPress += (s, e) =>
+                    {
+                        if (!char.IsControl(e.KeyChar) && (e.KeyChar < '1' || e.KeyChar > '6'))
+                            e.Handled = true;
+                    };
 
-                    _cells[r, c] = cell;
-                    tableLayoutPanel1.Controls.Add(cell, c, r);
-                    cell.Validating += new System.ComponentModel.CancelEventHandler(this.cell_Validating);
+                    cells[row, col] = cell;
+                    gridPanel.Controls.Add(cell);
                 }
             }
-
-            tableLayoutPanel1.ResumeLayout(false);
-
-            // Configuración del botón
-            btnSolve.Text = "Resolver Sudoku (IA)";
-            btnSolve.Dock = DockStyle.None;
-            btnSolve.Location = new Point(10, tableLayoutPanel1.Bottom + 20);
-            btnSolve.Size = new Size(180, 40);
         }
 
         private void LoadInitialBoard()
         {
-            int[,] board = _solver.InitialBoard;
-            for (int r = 0; r < 9; r++)
+            int[,] board = solver.InitialBoard;
+
+            for (int row = 0; row < 6; row++)
             {
-                for (int c = 0; c < 9; c++)
+                for (int col = 0; col < 6; col++)
                 {
-                    if (board[r, c] != 0)
+                    if (board[row, col] != 0)
                     {
-                        _cells[r, c].Text = board[r, c].ToString();
-                        _cells[r, c].ReadOnly = true;
-                        _cells[r, c].BackColor = Color.LightGray;
+                        cells[row, col].Text = board[row, col].ToString();
+                        cells[row, col].ReadOnly = true;
+                        cells[row, col].BackColor = Color.FromArgb(236, 240, 241);
+                        cells[row, col].ForeColor = Color.FromArgb(52, 73, 94);
                     }
                     else
                     {
-                        _cells[r, c].Text = "";
-                        _cells[r, c].ReadOnly = false;
-                        _cells[r, c].BackColor = Color.White;
+                        cells[row, col].Text = "";
+                        cells[row, col].ReadOnly = false;
+                        cells[row, col].BackColor = Color.White;
+                        cells[row, col].ForeColor = Color.FromArgb(41, 128, 185);
                     }
                 }
             }
         }
 
-        // --- Requisito b: Resolver automáticamente (Advertencia de nulidad corregida) ---
-        private async void btnSolve_Click(object? sender, EventArgs e)
+        private async void BtnSolve_Click(object? sender, EventArgs e)
         {
+            if (isSolving) return;
+
+            isSolving = true;
             btnSolve.Enabled = false;
+            btnNew.Enabled = false;
 
-            // Ejecuta el DFS en un hilo de fondo
-            SudokuNode? solutionNode = await Task.Run(() => _solver.Solve());
-
-            if (solutionNode != null)
+            SudokuNode.OnCellUpdate = (row, col, value) =>
             {
-                List<SudokuSolver.Move> solutionPath = _solver.GetSolutionPath(solutionNode);
-                await DisplaySolutionStepByStep(solutionPath);
-            }
-            else
-            {
-                MessageBox.Show("No se encontró solución para este tablero.", "Error");
-            }
+                if (this.IsDisposed) return;
 
-            btnSolve.Enabled = true;
-        }
-
-        private async Task DisplaySolutionStepByStep(List<SudokuSolver.Move> path)
-        {
-            // Pausa de 50ms para ver el proceso (requisito: pausar para mirar)
-            const int StepDelay = 50;
-
-            LoadInitialBoard();
-
-            foreach (var move in path)
-            {
-                _cells[move.R, move.C].Text = move.Value.ToString();
-                _cells[move.R, move.C].BackColor = Color.LightGreen;
-
-                // Application.DoEvents() y Task.Delay: esenciales para la animación
-                Application.DoEvents();
-                await Task.Delay(StepDelay);
-            }
-
-            // Marcar celdas resueltas al finalizar
-            for (int r = 0; r < 9; r++)
-            {
-                for (int c = 0; c < 9; c++)
+                try
                 {
-                    if (!_cells[r, c].ReadOnly)
-                        _cells[r, c].BackColor = Color.Yellow;
+                    if (this.InvokeRequired)
+                    {
+                        this.BeginInvoke(new Action(() =>
+                        {
+                            if (!this.IsDisposed && !cells[row, col].ReadOnly)
+                            {
+                                cells[row, col].Text = value > 0 ? value.ToString() : "";
+                                Application.DoEvents();
+                            }
+                        }));
+                    }
+                }
+                catch { }
+            };
+
+            try
+            {
+                SudokuNode? solution = await Task.Run(() => solver.Solve());
+
+                if (this.IsDisposed) return;
+
+                SudokuNode.OnCellUpdate = null;
+
+                if (solution != null)
+                {
+                    for (int r = 0; r < 6; r++)
+                    {
+                        for (int c = 0; c < 6; c++)
+                        {
+                            if (!cells[r, c].ReadOnly)
+                            {
+                                cells[r, c].Text = solution.Board[r, c].ToString();
+                                cells[r, c].BackColor = Color.FromArgb(212, 239, 223);
+                            }
+                        }
+                    }
+
+                    await Task.Delay(300);
+
+                    for (int r = 0; r < 6; r++)
+                    {
+                        for (int c = 0; c < 6; c++)
+                        {
+                            if (!cells[r, c].ReadOnly)
+                            {
+                                cells[r, c].BackColor = Color.White;
+                            }
+                        }
+                    }
+
+                    MessageBox.Show("Â¡Sudoku resuelto correctamente!", "Completado",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // Limpiar solo las celdas editables despuÃ©s del mensaje
+                    for (int r = 0; r < 6; r++)
+                    {
+                        for (int c = 0; c < 6; c++)
+                        {
+                            if (!cells[r, c].ReadOnly)
+                            {
+                                cells[r, c].Text = "";
+                                cells[r, c].BackColor = Color.White;
+                            }
+                        }
+                    }
+
+                    this.ActiveControl = null;
+                }
+            }
+            catch { }
+            finally
+            {
+                if (!this.IsDisposed)
+                {
+                    isSolving = false;
+                    btnSolve.Enabled = true;
+                    btnNew.Enabled = true;
+                    SudokuNode.OnCellUpdate = null;
                 }
             }
         }
 
-        // --- Requisito a: Permitir jugar al usuario (Advertencia de nulidad corregida) ---
-        private void cell_Validating(object? sender, System.ComponentModel.CancelEventArgs e)
+        private void BtnNew_Click(object? sender, EventArgs e)
         {
-            // Lógica para la interacción del usuario
-            TextBox? cell = sender as TextBox;
-            if (cell == null || cell.ReadOnly) return;
+            if (isSolving) return;
 
-            // ... (Aquí iría la validación de entrada del usuario)
+            solver = new SudokuSolver();
+            LoadInitialBoard();
+
+            // Quitar el foco despuÃ©s de generar nuevo juego
+            this.ActiveControl = null;
         }
 
-        private void Form1_Load(object sender, EventArgs e) { /* vacío */ }
+        private void Form1_Load(object? sender, EventArgs e) { }
     }
 }

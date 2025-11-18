@@ -1,85 +1,154 @@
 ﻿// Archivo: Sudoku/Core/SudokuSolver.cs
 using SEL;
-using System.Collections.Generic;
+using System;
 
 namespace Sudoku.Core
 {
     public class SudokuSolver
     {
-        // Tablero de inicio (0 representa celdas vacías)
-        private int[,] initialBoard = new int[,]
+        private int[,] initialBoard;
+        private static Random random = new Random();
+
+        public SudokuSolver()
         {
-            {5, 3, 0, 0, 7, 0, 0, 0, 0},
-            {6, 0, 0, 1, 9, 5, 0, 0, 0},
-            {0, 9, 8, 0, 0, 0, 0, 6, 0},
-            {8, 0, 0, 0, 6, 0, 0, 0, 3},
-            {4, 0, 0, 8, 0, 3, 0, 0, 1},
-            {7, 0, 0, 0, 2, 0, 0, 0, 6},
-            {0, 6, 0, 0, 0, 0, 2, 8, 0},
-            {0, 0, 0, 4, 1, 9, 0, 0, 5},
-            {0, 0, 0, 0, 8, 0, 0, 7, 9}
-        };
+            initialBoard = GenerateRandomSudoku();
+        }
 
         public int[,] InitialBoard => (int[,])initialBoard.Clone();
 
-        // Estructura para almacenar las jugadas (fila, columna, valor)
-        public struct Move
+        private int[,] GenerateRandomSudoku()
         {
-            public int R, C, Value;
-            public Move(int r, int c, int v) { R = r; C = c; Value = v; }
+            // Solución completa base
+            int[,] baseSolution = new int[,]
+            {
+                {1, 2, 3, 5, 4, 6},
+                {5, 4, 6, 1, 3, 2},
+                {4, 3, 2, 6, 1, 5},
+                {6, 1, 5, 4, 2, 3},
+                {3, 5, 1, 2, 6, 4},
+                {2, 6, 4, 3, 5, 1}
+            };
+
+            // Aplicar transformaciones aleatorias
+            int[,] transformed = ApplyRandomTransformations(baseSolution);
+
+            // Remover algunas celdas (20-25 celdas)
+            return RemoveCells(transformed, random.Next(20, 26));
         }
 
-        // Resuelve el problema usando el algoritmo DFS
+        private int[,] ApplyRandomTransformations(int[,] board)
+        {
+            int[,] result = (int[,])board.Clone();
+
+            // Intercambiar filas dentro de bloques horizontales
+            for (int block = 0; block < 3; block++)
+            {
+                if (random.Next(2) == 0)
+                {
+                    int row1 = block * 2;
+                    int row2 = block * 2 + 1;
+                    SwapRows(result, row1, row2);
+                }
+            }
+
+            // Intercambiar columnas dentro de bloques verticales
+            for (int block = 0; block < 2; block++)
+            {
+                int swaps = random.Next(3);
+                for (int i = 0; i < swaps; i++)
+                {
+                    int col1 = block * 3 + random.Next(3);
+                    int col2 = block * 3 + random.Next(3);
+                    if (col1 != col2)
+                        SwapCols(result, col1, col2);
+                }
+            }
+
+            // Intercambiar bloques de filas (bloques de 2 filas)
+            if (random.Next(2) == 0)
+            {
+                SwapRowBlocks(result, 0, 1);
+            }
+
+            // Intercambiar bloques de columnas (bloques de 3 columnas)
+            if (random.Next(2) == 0)
+            {
+                SwapColBlocks(result, 0, 1);
+            }
+
+            return result;
+        }
+
+        private void SwapRows(int[,] board, int row1, int row2)
+        {
+            for (int col = 0; col < 6; col++)
+            {
+                int temp = board[row1, col];
+                board[row1, col] = board[row2, col];
+                board[row2, col] = temp;
+            }
+        }
+
+        private void SwapCols(int[,] board, int col1, int col2)
+        {
+            for (int row = 0; row < 6; row++)
+            {
+                int temp = board[row, col1];
+                board[row, col1] = board[row, col2];
+                board[row, col2] = temp;
+            }
+        }
+
+        private void SwapRowBlocks(int[,] board, int block1, int block2)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                SwapRows(board, block1 * 2 + i, block2 * 2 + i);
+            }
+        }
+
+        private void SwapColBlocks(int[,] board, int block1, int block2)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                SwapCols(board, block1 * 3 + i, block2 * 3 + i);
+            }
+        }
+
+        private int[,] RemoveCells(int[,] board, int cellsToRemove)
+        {
+            int[,] result = (int[,])board.Clone();
+            int removed = 0;
+
+            while (removed < cellsToRemove)
+            {
+                int row = random.Next(6);
+                int col = random.Next(6);
+
+                if (result[row, col] != 0)
+                {
+                    result[row, col] = 0;
+                    removed++;
+                }
+            }
+
+            return result;
+        }
+
         public SudokuNode? Solve()
         {
             SudokuNode rootNode = new SudokuNode(initialBoard);
-            Graph<SudokuNode> graph = new Graph<SudokuNode>(rootNode); // Inicia el DFS
+            Graph<SudokuNode> graph = new Graph<SudokuNode>(rootNode);
 
             foreach (SudokuNode node in graph.depthFirst())
             {
-                (int r, int c) empty = (-1, -1);
-                node.FindNextEmptyCell(out empty.r, out empty.c);
-
-                if (empty.r == -1) // Solución encontrada (no hay celdas vacías)
+                if (node.IsGoal())
                 {
                     return node;
                 }
             }
-            return null; // No se encontró solución
-        }
 
-        // Genera la secuencia de movimientos a partir del nodo solución
-        public List<Move> GetSolutionPath(SudokuNode solutionNode)
-        {
-            List<Move> path = new List<Move>();
-            SudokuNode? current = solutionNode;
-
-            // Recorre la cadena de padres hacia la raíz
-            while (current != null && current.parent != null)
-            {
-                // El compilador garantiza que current.parent no es null aquí
-                int[,] parentBoard = current.parent.Board;
-
-                // Identifica la única celda que cambió en este nodo respecto a su padre
-                for (int r = 0; r < 9; r++)
-                {
-                    for (int c = 0; c < 9; c++)
-                    {
-                        if (current.Board[r, c] != parentBoard[r, c])
-                        {
-                            path.Add(new Move(r, c, current.Board[r, c]));
-                            goto NextNodeIteration;
-                        }
-                    }
-                }
-
-            NextNodeIteration:
-                current = current.parent;
-            }
-
-            // Invertir para obtener el orden de ejecución de los movimientos
-            path.Reverse();
-            return path;
+            return null;
         }
     }
 }
