@@ -17,3 +17,5 @@ C:\Users\d4vho\Desktop\Proyectos\Ejercicios Cepeda\ProyectosIA\OchoReinasSolver\
 C:\Users\d4vho\Desktop\Proyectos\Ejercicios Cepeda\ProyectosIA\OchoReinasSolver\obj\Debug\net8.0-windows\OchoReinasSolver.pdb
 C:\Users\d4vho\Desktop\Proyectos\Ejercicios Cepeda\ProyectosIA\OchoReinasSolver\obj\Debug\net8.0-windows\OchoReinasSolver.genruntimeconfig.cache
 C:\Users\d4vho\Desktop\Proyectos\Ejercicios Cepeda\ProyectosIA\OchoReinasSolver\obj\Debug\net8.0-windows\ref\OchoReinasSolver.dll
+C:\Users\d4vho\Desktop\Proyectos\Ejercicios Cepeda\ProyectosIA\OchoReinasSolver\obj\Debug\net8.0-windows\OchoReinasSolver.Form1.resources
+C:\Users\d4vho\Desktop\Proyectos\Ejercicios Cepeda\ProyectosIA\OchoReinasSolver\obj\Debug\net8.0-windows\OchoReinasSolver.csproj.GenerateResource.cache

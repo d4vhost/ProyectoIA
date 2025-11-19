@@ -1,13 +1,13 @@
 ﻿// Archivo: OchoReinasSolver/Core/Queen.cs
 using SEL;
 using System.Collections.Generic;
-using System.Linq; 
+using System.Linq;
 
 namespace OchoReinasSolver.Core
 {
     public class Queen : IGNode<Queen>
     {
-        public const int max = 8; 
+        public const int max = 8;
 
         public int row { get; private set; }
         public int col { get; private set; }
@@ -64,7 +64,7 @@ namespace OchoReinasSolver.Core
                     }
                 }
             }
-            return null; 
+            return null;
         }
 
         private bool IsSafe(Queen newQueen)
@@ -72,6 +72,10 @@ namespace OchoReinasSolver.Core
             Queen? current = newQueen.parent;
             while (current != null)
             {
+                // ✅ CORRECCIÓN: Verificar columnas (esto faltaba)
+                if (newQueen.col == current.col) return false;
+
+                // Verificar diagonales
                 if (newQueen.row - newQueen.col == current.row - current.col) return false;
                 if (newQueen.row + newQueen.col == current.row + current.col) return false;
 

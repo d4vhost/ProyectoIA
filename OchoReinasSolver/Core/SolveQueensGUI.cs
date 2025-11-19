@@ -13,18 +13,22 @@ namespace OchoReinasSolver.Core
 
         public void SolveDFS(Action<char[,]> onSolutionFound)
         {
-            Queen root = new Queen(1, 1, null);
-            Graph<Queen> queenGraph = new Graph<Queen>(root);
 
-            foreach (Queen q in queenGraph.depthFirst())
+            for (int startCol = 1; startCol <= Queen.max; startCol++)
             {
-                NodesSearched++;
+                Queen root = new Queen(1, startCol, null);
+                Graph<Queen> queenGraph = new Graph<Queen>(root);
 
-                if (q.row == Queen.max)
+                foreach (Queen q in queenGraph.depthFirst())
                 {
-                    char[,] solution = CreateSolutionBoard(q);
-                    _solucionesEncontradas++;
-                    onSolutionFound?.Invoke(solution);
+                    NodesSearched++;
+
+                    if (q.row == Queen.max)
+                    {
+                        char[,] solution = CreateSolutionBoard(q);
+                        _solucionesEncontradas++;
+                        onSolutionFound?.Invoke(solution);
+                    }
                 }
             }
         }

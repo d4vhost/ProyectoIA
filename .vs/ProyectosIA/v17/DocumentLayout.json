@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoReinasSolver\\Form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:OchoReinasSolver\\Form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CE90BA67-9C85-479C-92CF-93367A744CC1}|OchoReinasSolver\\OchoReinasSolver.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\ochoreinassolver\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE90BA67-9C85-479C-92CF-93367A744CC1}|OchoReinasSolver\\OchoReinasSolver.csproj|solutionrelative:ochoreinassolver\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE90BA67-9C85-479C-92CF-93367A744CC1}|OchoReinasSolver\\OchoReinasSolver.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\ochoreinassolver\\core\\queen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE90BA67-9C85-479C-92CF-93367A744CC1}|OchoReinasSolver\\OchoReinasSolver.csproj|solutionrelative:ochoreinassolver\\core\\queen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CE90BA67-9C85-479C-92CF-93367A744CC1}|OchoReinasSolver\\OchoReinasSolver.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\ochoreinassolver\\core\\solvequeensgui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CE90BA67-9C85-479C-92CF-93367A744CC1}|OchoReinasSolver\\OchoReinasSolver.csproj|solutionrelative:ochoreinassolver\\core\\solvequeensgui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CE90BA67-9C85-479C-92CF-93367A744CC1}|OchoReinasSolver\\OchoReinasSolver.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\ochoreinassolver\\ochoreinassolver.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{CE90BA67-9C85-479C-92CF-93367A744CC1}|OchoReinasSolver\\OchoReinasSolver.csproj|solutionrelative:ochoreinassolver\\ochoreinassolver.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,28 +26,28 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "SolveQueensGUI.cs",
               "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoReinasSolver\\Core\\SolveQueensGUI.cs",
               "RelativeDocumentMoniker": "OchoReinasSolver\\Core\\SolveQueensGUI.cs",
               "ToolTip": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoReinasSolver\\Core\\SolveQueensGUI.cs",
               "RelativeToolTip": "OchoReinasSolver\\Core\\SolveQueensGUI.cs",
-              "ViewState": "AgIAACMAAAAAAAAAAAAgwCYAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAgwCgAAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-19T00:05:08.789Z",
+              "WhenOpened": "2025-11-19T13:12:56.787Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "OchoReinasSolver",
-              "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoReinasSolver\\OchoReinasSolver.csproj",
-              "RelativeDocumentMoniker": "OchoReinasSolver\\OchoReinasSolver.csproj",
-              "ToolTip": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoReinasSolver\\OchoReinasSolver.csproj",
-              "RelativeToolTip": "OchoReinasSolver\\OchoReinasSolver.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-11-19T00:04:48.758Z",
+              "DocumentIndex": 1,
+              "Title": "Queen.cs",
+              "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoReinasSolver\\Core\\Queen.cs",
+              "RelativeDocumentMoniker": "OchoReinasSolver\\Core\\Queen.cs",
+              "ToolTip": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoReinasSolver\\Core\\Queen.cs",
+              "RelativeToolTip": "OchoReinasSolver\\Core\\Queen.cs",
+              "ViewState": "AgIAAEAAAAAAAAAAAAAgwEwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T13:03:51.614Z",
               "EditorCaption": ""
             },
             {
@@ -58,9 +58,9 @@
               "RelativeDocumentMoniker": "OchoReinasSolver\\Form1.cs",
               "ToolTip": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoReinasSolver\\Form1.cs",
               "RelativeToolTip": "OchoReinasSolver\\Form1.cs",
-              "ViewState": "AgIAADMAAAAAAAAAAAAYwD8AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAOoBAAAAAAAAAAAkwAECAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-19T00:04:20.853Z",
+              "WhenOpened": "2025-11-19T13:03:37.943Z",
               "EditorCaption": ""
             }
           ]
