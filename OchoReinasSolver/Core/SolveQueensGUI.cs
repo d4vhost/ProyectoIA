@@ -6,6 +6,11 @@ using System.Collections.Generic;
 
 namespace OchoReinasSolver.Core
 {
+    /// <summary>
+    /// Solucionador del problema de las 8 Reinas.
+    /// Implementa Búsqueda en Profundidad (DFS) utilizando la librería SEL.
+    /// Explora exhaustivamente las ramas del árbol de estados hasta encontrar una colocación válida de reinas.
+    /// </summary>
     public class SolveQueensGUI
     {
         public int NodesSearched { get; private set; } = 0;

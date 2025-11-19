@@ -147,7 +147,7 @@ namespace OchoReinasSolver
             lblTitle = new Label
             {
                 Text = "8 REINAS",
-                Font = new Font("Segoe UI", 32, FontStyle.Bold),
+                Font = new Font("Segoe UI", 22, FontStyle.Bold),
                 ForeColor = Color.FromArgb(41, 128, 185),
                 AutoSize = false,
                 Size = new Size(640, 60),
@@ -509,6 +509,11 @@ namespace OchoReinasSolver
 
         private void Form1_Load(object sender, EventArgs e)
         {
+        }
+
+        private void Form1_Load_1(object sender, EventArgs e)
+        {
+
         }
     }
 }

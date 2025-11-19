@@ -1,5 +1,4 @@
-﻿// Archivo: Sudoku/Core/SudokuSolver.cs
-using SEL;
+﻿using SEL;
 using System;
 
 namespace Sudoku.Core
@@ -18,59 +17,63 @@ namespace Sudoku.Core
 
         private int[,] GenerateRandomSudoku()
         {
-            // Solución completa base
+            // BASE 9x9 VÁLIDA
             int[,] baseSolution = new int[,]
             {
-                {1, 2, 3, 5, 4, 6},
-                {5, 4, 6, 1, 3, 2},
-                {4, 3, 2, 6, 1, 5},
-                {6, 1, 5, 4, 2, 3},
-                {3, 5, 1, 2, 6, 4},
-                {2, 6, 4, 3, 5, 1}
+                {1, 2, 3, 4, 5, 6, 7, 8, 9},
+                {4, 5, 6, 7, 8, 9, 1, 2, 3},
+                {7, 8, 9, 1, 2, 3, 4, 5, 6},
+                {2, 3, 1, 5, 6, 4, 8, 9, 7},
+                {5, 6, 4, 8, 9, 7, 2, 3, 1},
+                {8, 9, 7, 2, 3, 1, 5, 6, 4},
+                {3, 1, 2, 6, 4, 5, 9, 7, 8},
+                {6, 4, 5, 9, 7, 8, 3, 1, 2},
+                {9, 7, 8, 3, 1, 2, 6, 4, 5}
             };
 
-            // Aplicar transformaciones aleatorias
+            // Aplicar transformaciones
             int[,] transformed = ApplyRandomTransformations(baseSolution);
 
-            // Remover algunas celdas (20-25 celdas)
-            return RemoveCells(transformed, random.Next(20, 26));
+            // Remover celdas (Para 9x9: Difícil ~50, Fácil ~30. Usaremos 40-50)
+            return RemoveCells(transformed, random.Next(40, 55));
         }
 
         private int[,] ApplyRandomTransformations(int[,] board)
         {
             int[,] result = (int[,])board.Clone();
 
-            // Intercambiar filas dentro de bloques horizontales
+            // En 9x9 hay 3 grandes bloques de filas y columnas
+
+            // 1. Intercambiar filas dentro del mismo bloque (0-2, 3-5, 6-8)
             for (int block = 0; block < 3; block++)
             {
                 if (random.Next(2) == 0)
                 {
-                    int row1 = block * 2;
-                    int row2 = block * 2 + 1;
-                    SwapRows(result, row1, row2);
+                    int row1 = block * 3 + random.Next(3);
+                    int row2 = block * 3 + random.Next(3);
+                    if (row1 != row2) SwapRows(result, row1, row2);
                 }
             }
 
-            // Intercambiar columnas dentro de bloques verticales
-            for (int block = 0; block < 2; block++)
+            // 2. Intercambiar columnas dentro del mismo bloque
+            for (int block = 0; block < 3; block++)
             {
-                int swaps = random.Next(3);
-                for (int i = 0; i < swaps; i++)
+                if (random.Next(2) == 0)
                 {
                     int col1 = block * 3 + random.Next(3);
                     int col2 = block * 3 + random.Next(3);
-                    if (col1 != col2)
-                        SwapCols(result, col1, col2);
+                    if (col1 != col2) SwapCols(result, col1, col2);
                 }
             }
 
-            // Intercambiar bloques de filas (bloques de 2 filas)
+            // 3. Intercambiar bloques completos de filas (bloques de 3)
             if (random.Next(2) == 0)
             {
+                // Simple shuffle de bloques 0 y 1 por ejemplo
                 SwapRowBlocks(result, 0, 1);
             }
 
-            // Intercambiar bloques de columnas (bloques de 3 columnas)
+            // 4. Intercambiar bloques completos de columnas
             if (random.Next(2) == 0)
             {
                 SwapColBlocks(result, 0, 1);
@@ -81,7 +84,7 @@ namespace Sudoku.Core
 
         private void SwapRows(int[,] board, int row1, int row2)
         {
-            for (int col = 0; col < 6; col++)
+            for (int col = 0; col < 9; col++)
             {
                 int temp = board[row1, col];
                 board[row1, col] = board[row2, col];
@@ -91,7 +94,7 @@ namespace Sudoku.Core
 
         private void SwapCols(int[,] board, int col1, int col2)
         {
-            for (int row = 0; row < 6; row++)
+            for (int row = 0; row < 9; row++)
             {
                 int temp = board[row, col1];
                 board[row, col1] = board[row, col2];
@@ -99,14 +102,16 @@ namespace Sudoku.Core
             }
         }
 
+        // Intercambia 3 filas completas con otras 3
         private void SwapRowBlocks(int[,] board, int block1, int block2)
         {
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 3; i++)
             {
-                SwapRows(board, block1 * 2 + i, block2 * 2 + i);
+                SwapRows(board, block1 * 3 + i, block2 * 3 + i);
             }
         }
 
+        // Intercambia 3 columnas completas con otras 3
         private void SwapColBlocks(int[,] board, int block1, int block2)
         {
             for (int i = 0; i < 3; i++)
@@ -122,8 +127,8 @@ namespace Sudoku.Core
 
             while (removed < cellsToRemove)
             {
-                int row = random.Next(6);
-                int col = random.Next(6);
+                int row = random.Next(9);
+                int col = random.Next(9);
 
                 if (result[row, col] != 0)
                 {
@@ -131,7 +136,6 @@ namespace Sudoku.Core
                     removed++;
                 }
             }
-
             return result;
         }
 
@@ -147,7 +151,6 @@ namespace Sudoku.Core
                     return node;
                 }
             }
-
             return null;
         }
     }

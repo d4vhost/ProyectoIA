@@ -63,7 +63,7 @@ namespace GalletaAI
             lblTitle = new Label
             {
                 Text = "GALLETA",
-                Font = new Font("Segoe UI", 32, FontStyle.Bold),
+                Font = new Font("Segoe UI", 22, FontStyle.Bold),
                 ForeColor = Color.FromArgb(41, 128, 185),
                 AutoSize = false,
                 Size = new Size(640, 60),

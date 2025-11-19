@@ -1,7 +1,7 @@
-﻿// Archivo: OchoPuzzle/Form1.cs
-using OchoPuzzle.Core;
+﻿using OchoPuzzle.Core;
 using SEL;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace OchoPuzzle
 {
@@ -36,48 +36,58 @@ namespace OchoPuzzle
 
         private void Form1_Load(object? sender, EventArgs e)
         {
-            // Configuración del formulario
+            // --- 1. AJUSTE DE TAMAÑO ---
             this.Text = "8-Puzzle Solver";
             this.BackColor = Color.FromArgb(245, 247, 250);
-            this.ClientSize = new Size(420, 620);
+
+            // Reduje la altura a 760 para asegurar que entre en pantallas de laptops
+            this.ClientSize = new Size(540, 760);
+
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
+            // StartPosition aquí a veces falla si cambiamos el tamaño,
+            // por eso usamos CenterToScreen() al final.
             this.StartPosition = FormStartPosition.CenterScreen;
 
-            // Título
+            // --- 2. TÍTULO ---
             lblTitle = new Label
             {
                 Text = "8-PUZZLE",
-                Font = new Font("Segoe UI", 28, FontStyle.Bold),
+                Font = new Font("Segoe UI", 22, FontStyle.Bold),
                 ForeColor = Color.FromArgb(41, 128, 185),
                 AutoSize = false,
-                Size = new Size(380, 50),
-                Location = new Point(20, 15),
+                Size = new Size(500, 70),
+                Location = new Point(20, 15), // Subí un poco el título
                 TextAlign = ContentAlignment.MiddleCenter,
                 BackColor = Color.Transparent
             };
             this.Controls.Add(lblTitle);
 
-            // Panel contenedor del juego
+            // --- 3. PANEL DEL JUEGO ---
+            int panelSize = 400;
             gamePanel = new Panel
             {
-                Size = new Size(280, 280),
-                Location = new Point(70, 80),
+                Size = new Size(panelSize, panelSize),
+                Location = new Point((this.ClientSize.Width - panelSize) / 2, 90), // Subí un poco el panel
                 BackColor = Color.FromArgb(44, 62, 80),
                 BorderStyle = BorderStyle.None
             };
             this.Controls.Add(gamePanel);
 
-            // Crear botones dentro del panel
+            // --- 4. BOTONES (FICHAS) ---
+            int btnSize = 125;
+            int gap = 5;
+            int offset = 5;
+
             for (int i = 0; i < SqNode.width; i++)
             {
                 for (int j = 0; j < SqNode.width; j++)
                 {
                     Button btn = new Button
                     {
-                        Size = new Size(85, 85),
-                        Location = new Point(j * 90 + 10, i * 90 + 10),
-                        Font = new Font("Segoe UI", 32, FontStyle.Bold),
+                        Size = new Size(btnSize, btnSize),
+                        Location = new Point(j * (btnSize + gap) + offset, i * (btnSize + gap) + offset),
+                        Font = new Font("Segoe UI", 48, FontStyle.Bold),
                         Tag = new Point(i, j),
                         BackColor = Color.White,
                         ForeColor = Color.FromArgb(52, 73, 94),
@@ -94,70 +104,66 @@ namespace OchoPuzzle
                 }
             }
 
+            // --- 5. CONTROLES INFERIORES ---
+
             // Label de estado
-            this.lblStatus.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            this.lblStatus.Font = new Font("Segoe UI", 12, FontStyle.Bold);
             this.lblStatus.ForeColor = Color.FromArgb(52, 73, 94);
             this.lblStatus.AutoSize = false;
-            this.lblStatus.Size = new Size(380, 40);
-            this.lblStatus.Location = new Point(20, 380);
+            this.lblStatus.Size = new Size(500, 40);
+            this.lblStatus.Location = new Point(20, 500);
             this.lblStatus.TextAlign = ContentAlignment.MiddleCenter;
             this.lblStatus.Text = "¡Listo para jugar!";
             this.lblStatus.BackColor = Color.Transparent;
 
+            // Botones de acción
+            int btnActionWidth = 200;
+            int btnHeight = 60;
+            int spaceBetween = 40;
+            int startX = (this.ClientSize.Width - (btnActionWidth * 2 + spaceBetween)) / 2;
+
             // Botón Desordenar
             this.btnShuffle.Text = "DESORDENAR";
-            this.btnShuffle.Font = new Font("Segoe UI", 12, FontStyle.Bold);
-            this.btnShuffle.Size = new Size(180, 50);
-            this.btnShuffle.Location = new Point(35, 440);
+            this.btnShuffle.Font = new Font("Segoe UI", 14, FontStyle.Bold);
+            this.btnShuffle.Size = new Size(btnActionWidth, btnHeight);
+            this.btnShuffle.Location = new Point(startX, 550); // Subido a 550
             this.btnShuffle.ForeColor = Color.White;
             this.btnShuffle.BackColor = Color.FromArgb(52, 152, 219);
             this.btnShuffle.FlatStyle = FlatStyle.Flat;
             this.btnShuffle.FlatAppearance.BorderSize = 0;
-            this.btnShuffle.FlatAppearance.MouseOverBackColor = Color.FromArgb(41, 128, 185);
             this.btnShuffle.Cursor = Cursors.Hand;
             this.btnShuffle.Click += btnShuffle_Click;
 
             // Botón Resolver
             this.btnSolve.Text = "RESOLVER (A*)";
-            this.btnSolve.Font = new Font("Segoe UI", 12, FontStyle.Bold);
-            this.btnSolve.Size = new Size(180, 50);
-            this.btnSolve.Location = new Point(225, 440);
+            this.btnSolve.Font = new Font("Segoe UI", 14, FontStyle.Bold);
+            this.btnSolve.Size = new Size(btnActionWidth, btnHeight);
+            this.btnSolve.Location = new Point(startX + btnActionWidth + spaceBetween, 550); // Subido a 550
             this.btnSolve.ForeColor = Color.White;
             this.btnSolve.BackColor = Color.FromArgb(46, 204, 113);
             this.btnSolve.FlatStyle = FlatStyle.Flat;
             this.btnSolve.FlatAppearance.BorderSize = 0;
-            this.btnSolve.FlatAppearance.MouseOverBackColor = Color.FromArgb(39, 174, 96);
             this.btnSolve.Cursor = Cursors.Hand;
             this.btnSolve.Click += btnSolve_Click;
-
-            // Label de información adicional
-            Label lblInfo = new Label
-            {
-                Text = "Haz clic en las fichas adyacentes al espacio vacío",
-                Font = new Font("Segoe UI", 9, FontStyle.Regular),
-                ForeColor = Color.FromArgb(127, 140, 141),
-                AutoSize = false,
-                Size = new Size(380, 30),
-                Location = new Point(20, 510),
-                TextAlign = ContentAlignment.MiddleCenter,
-                BackColor = Color.Transparent
-            };
-            this.Controls.Add(lblInfo);
 
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.btnShuffle);
             this.Controls.Add(this.btnSolve);
 
             UpdateUI();
+
+            // === TRUCO IMPORTANTE ===
+            // Esto obliga al formulario a recalcular su posición central
+            // basándose en el tamaño final que acabamos de configurar.
+            this.CenterToScreen();
         }
+
+        // --- MÉTODOS DE LÓGICA SIN CAMBIOS ---
 
         private void Button_Click(object? sender, EventArgs e)
         {
-            if (sender is not Button btn)
-                return;
-
-            if (btn.Tag is not Point pos)
-                return;
+            if (sender is not Button btn) return;
+            if (btn.Tag is not Point pos) return;
 
             if (Math.Abs(pos.X - _zeroPos.X) + Math.Abs(pos.Y - _zeroPos.Y) == 1)
             {
@@ -252,7 +258,6 @@ namespace OchoPuzzle
 
                     if (val != 0)
                     {
-                        // Efecto visual para números
                         _buttons[i, j].BackColor = Color.White;
                         _buttons[i, j].ForeColor = Color.FromArgb(52, 73, 94);
                     }

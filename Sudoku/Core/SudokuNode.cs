@@ -29,9 +29,10 @@ namespace Sudoku.Core
 
         private (int row, int col) FindFirstEmptyCell()
         {
-            for (int row = 0; row < 6; row++)
+            // CAMBIO: Límite aumentado a 9
+            for (int row = 0; row < 9; row++)
             {
-                for (int col = 0; col < 6; col++)
+                for (int col = 0; col < 9; col++)
                 {
                     if (Board[row, col] == 0)
                     {
@@ -49,18 +50,20 @@ namespace Sudoku.Core
 
         public static bool IsValid(int[,] board, int row, int col, int num)
         {
-            // Verificar fila
-            for (int c = 0; c < 6; c++)
+            // CAMBIO: Verificar fila (límite 9)
+            for (int c = 0; c < 9; c++)
                 if (board[row, c] == num) return false;
 
-            // Verificar columna
-            for (int r = 0; r < 6; r++)
+            // CAMBIO: Verificar columna (límite 9)
+            for (int r = 0; r < 9; r++)
                 if (board[r, col] == num) return false;
 
-            // Verificar bloque 2x3
-            int startRow = (row / 2) * 2;
+            // CAMBIO: Verificar bloque 3x3 (Estándar Sudoku 9x9)
+            // La fórmula cambia: dividimos para 3 en lugar de 2
+            int startRow = (row / 3) * 3;
             int startCol = (col / 3) * 3;
-            for (int r = startRow; r < startRow + 2; r++)
+
+            for (int r = startRow; r < startRow + 3; r++)
                 for (int c = startCol; c < startCol + 3; c++)
                     if (board[r, c] == num) return false;
 
@@ -74,11 +77,12 @@ namespace Sudoku.Core
             int row = EmptyCell.row;
             int col = EmptyCell.col;
 
-            for (int num = 1; num <= 6; num++)
+            // CAMBIO: Probar números del 1 al 9
+            for (int num = 1; num <= 9; num++)
             {
                 // Mostrar en UI
                 OnCellUpdate?.Invoke(row, col, num);
-                System.Threading.Thread.Sleep(5);
+                System.Threading.Thread.Sleep(1); // Reduje un poco el tiempo para que 9x9 no sea eterno
 
                 if (IsValid(Board, row, col, num))
                 {
@@ -108,13 +112,14 @@ namespace Sudoku.Core
 
             // Borrar valor anterior
             OnCellUpdate?.Invoke(row, col, 0);
-            System.Threading.Thread.Sleep(3);
+            System.Threading.Thread.Sleep(1);
 
-            for (int num = LastValue + 1; num <= 6; num++)
+            // CAMBIO: Probar hasta el 9
+            for (int num = LastValue + 1; num <= 9; num++)
             {
                 // Mostrar en UI
                 OnCellUpdate?.Invoke(row, col, num);
-                System.Threading.Thread.Sleep(5);
+                System.Threading.Thread.Sleep(1);
 
                 if (IsValid(theParent.Board, row, col, num))
                 {
@@ -131,7 +136,6 @@ namespace Sudoku.Core
             return null;
         }
 
-        // Implementación requerida por IGNode
         public void FindNextEmptyCell(out int r, out int c)
         {
             r = EmptyCell.row;

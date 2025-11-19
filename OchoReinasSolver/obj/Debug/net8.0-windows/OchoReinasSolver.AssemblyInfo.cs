@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OchoReinasSolver")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cef2eba6c0436244a65beee7fe85246f2a707bce")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+edf3ada0cbd681d84d6455bf33e71e89cdd5dfa5")]
 [assembly: System.Reflection.AssemblyProductAttribute("OchoReinasSolver")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OchoReinasSolver")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

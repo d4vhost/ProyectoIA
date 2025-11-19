@@ -46,7 +46,7 @@ namespace GalletaAI.Core
         public int AIScore { get; private set; }
         public Player CurrentPlayer { get; private set; }
 
-        // ✅ Marcador de esquinas que NO cuentan para el puntaje
+        //Marcador de esquinas que NO cuentan para el puntaje
         private HashSet<(int, int)> _nonPlayableCorners = new HashSet<(int, int)>();
 
         public GameState()
@@ -71,7 +71,7 @@ namespace GalletaAI.Core
             _nonPlayableCorners = new HashSet<(int, int)>(source._nonPlayableCorners);
         }
 
-        // ✅ Método para marcar esquinas como NO contables
+        // Método para marcar esquinas como NO contables
         public void MarkCornerAsNonPlayable(int row, int col)
         {
             _nonPlayableCorners.Add((row, col));
@@ -120,7 +120,7 @@ namespace GalletaAI.Core
             return moves;
         }
 
-        // ✅ Método especial para movimientos iniciales (no cambia turno, no suma puntaje)
+        //Método especial para movimientos iniciales (no cambia turno, no suma puntaje)
         public void ApplyInitialMove(Move move)
         {
             if (move.IsHorizontal)
@@ -163,7 +163,7 @@ namespace GalletaAI.Core
             return CurrentPlayer;
         }
 
-        // ✅ Modificado para NO contar esquinas negras
+        //Modificado para NO contar esquinas negras
         private int CheckForCompletedSquares(Move move, bool countScore)
         {
             int completed = 0;
@@ -191,7 +191,7 @@ namespace GalletaAI.Core
             return completed;
         }
 
-        // ✅ Modificado para NO contar esquinas negras en el puntaje
+        //Modificado para NO contar esquinas negras en el puntaje
         private bool CheckSquare(int r, int c, bool countScore)
         {
             if (SquareOwners[r, c] != Player.None) return false;
@@ -203,7 +203,7 @@ namespace GalletaAI.Core
             {
                 SquareOwners[r, c] = CurrentPlayer;
 
-                // ✅ Si es una esquina negra, NO contarla
+                // Si es una esquina negra, NO contarla
                 if (_nonPlayableCorners.Contains((r, c)))
                 {
                     return false; // No suma al puntaje

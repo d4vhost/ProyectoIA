@@ -6,6 +6,11 @@ using System.Drawing;
 
 namespace OchoPuzzle.Core
 {
+    /// <summary>
+    /// Solucionador del 8-Puzzle.
+    /// Utiliza el algoritmo de búsqueda A* (A-Star) mediante la librería SEL.
+    /// La búsqueda se guía por una función heurística que combina los movimientos realizados y la distancia al objetivo.
+    /// </summary>
     public class SqPuzzle
     {
         public SqNode root;
