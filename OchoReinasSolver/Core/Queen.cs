@@ -1,68 +1,81 @@
 ﻿// Archivo: OchoReinasSolver/Core/Queen.cs
 using SEL;
-using System;
+using System.Collections.Generic;
+using System.Linq; 
 
 namespace OchoReinasSolver.Core
 {
     public class Queen : IGNode<Queen>
     {
-        public static int max = 8;
-        public int row = 1;
-        public int col = 1;
-        Queen? theParent = null;
+        public const int max = 8; 
+
+        public int row { get; private set; }
+        public int col { get; private set; }
+
+        public Queen? parent { get; set; }
+        private List<Queen>? _children = null;
+        private int _currentChildIndex = 0;
 
         public Queen(int r, int c, Queen? p)
         {
             row = r;
             col = c;
-            theParent = p;
-        }
-
-        public Queen? parent
-        {
-            get { return theParent; }
-            set { theParent = value; }
-        }
-
-        public Queen? nextSibling()
-        {
-            Queen q = new Queen(row, 1, parent);
-
-            for (q.col = this.col + 1; q.col <= max; q.col++)
-            {
-                if (q.isvalid())
-                    return q;
-            }
-            return null;
+            parent = p;
         }
 
         public Queen? firstChild()
         {
-            if (row >= max)
-                return null;
-
-            Queen q = new Queen(row + 1, 1, this);
-
-            for (q.col = 1; q.col <= max; q.col++)
+            if (_children == null)
             {
-                if (q.isvalid())
-                    return q;
+                _children = new List<Queen>();
+                if (row < max)
+                {
+                    int nextRow = row + 1;
+                    for (int nextCol = 1; nextCol <= max; nextCol++)
+                    {
+                        Queen nextQueen = new Queen(nextRow, nextCol, this);
+                        if (IsSafe(nextQueen))
+                        {
+                            _children.Add(nextQueen);
+                        }
+                    }
+                }
+            }
+
+            _currentChildIndex = 0;
+            if (_children.Count > 0)
+            {
+                return _children[0];
             }
             return null;
         }
 
-        public bool isvalid()
+        public Queen? nextSibling()
         {
-            Queen? par = parent;
-            while (par != null)
+            if (parent != null)
             {
-                if (par.col == this.col)
-                    return false;
+                if (parent._children != null)
+                {
+                    parent._currentChildIndex++;
 
-                if (Math.Abs(par.row - row) == Math.Abs(par.col - col))
-                    return false;
+                    if (parent._currentChildIndex < parent._children.Count)
+                    {
+                        return parent._children[parent._currentChildIndex];
+                    }
+                }
+            }
+            return null; 
+        }
 
-                par = par.parent;
+        private bool IsSafe(Queen newQueen)
+        {
+            Queen? current = newQueen.parent;
+            while (current != null)
+            {
+                if (newQueen.row - newQueen.col == current.row - current.col) return false;
+                if (newQueen.row + newQueen.col == current.row + current.col) return false;
+
+                current = current.parent;
             }
             return true;
         }

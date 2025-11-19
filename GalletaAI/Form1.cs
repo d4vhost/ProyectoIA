@@ -2,6 +2,7 @@
 using GalletaAI.Core;
 using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace GalletaAI
         private Move? _hoveredMove = null;
         private bool _aiThinking = false;
 
+        // Colores originales de las líneas
         private Pen _humanPen = new Pen(Color.CornflowerBlue, LINE_WIDTH);
         private Pen _aiPen = new Pen(Color.Crimson, LINE_WIDTH);
         private Pen _hoverPen = new Pen(Color.FromArgb(180, 100, 149, 237), LINE_WIDTH + 2);
@@ -28,23 +30,83 @@ namespace GalletaAI
         private Dictionary<string, Player> _lineOwners = new Dictionary<string, Player>();
         private HashSet<string> _initialPatternLines = new HashSet<string>();
 
-        // IMPORTANTE: HashSet estático compartido con GameState
         public static HashSet<string> PlayableLines = new HashSet<string>();
+
+        // Panel para el tablero
+        private Panel boardPanel = null!;
+        private Label lblTitle = null!;
 
         public Form1()
         {
             InitializeComponent();
 
+            this.Text = "Galleta AI";
             this.DoubleBuffered = true;
-            this.BackColor = Color.FromArgb(245, 245, 245);
-            this.ClientSize = new Size(700, 750);
+            this.BackColor = Color.FromArgb(245, 247, 250);
+            this.ClientSize = new Size(700, 800);
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
 
-            this.Paint += Form1_Paint;
-            this.MouseMove += Form1_MouseMove;
-            this.MouseClick += Form1_MouseClick;
+            InitializeCustomComponents();
+
+            boardPanel.MouseMove += BoardPanel_MouseMove;
+            boardPanel.MouseClick += BoardPanel_MouseClick;
             btnNewGame.Click += btnNewGame_Click;
 
             StartNewGame();
+        }
+
+        private void InitializeCustomComponents()
+        {
+            // Título estilo Sudoku
+            lblTitle = new Label
+            {
+                Text = "GALLETA",
+                Font = new Font("Segoe UI", 32, FontStyle.Bold),
+                ForeColor = Color.FromArgb(41, 128, 185),
+                AutoSize = false,
+                Size = new Size(640, 60),
+                Location = new Point(30, 15),
+                TextAlign = ContentAlignment.MiddleCenter,
+                BackColor = Color.Transparent
+            };
+            this.Controls.Add(lblTitle);
+
+            // Panel contenedor del tablero (estilo Sudoku)
+            boardPanel = new Panel
+            {
+                Size = new Size(540, 540),
+                Location = new Point(80, 90),
+                BackColor = Color.FromArgb(44, 62, 80),
+                BorderStyle = BorderStyle.None
+            };
+            // Habilitar DoubleBuffered para evitar parpadeo
+            typeof(Panel).InvokeMember("DoubleBuffered",
+                System.Reflection.BindingFlags.SetProperty | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic,
+                null, boardPanel, new object[] { true });
+
+            boardPanel.Paint += BoardPanel_Paint;
+            this.Controls.Add(boardPanel);
+
+            // Estilo del label de estado
+            lblStatus.Font = new Font("Segoe UI", 11, FontStyle.Bold);
+            lblStatus.Size = new Size(640, 30);
+            lblStatus.Location = new Point(30, 645);
+            lblStatus.TextAlign = ContentAlignment.MiddleCenter;
+            lblStatus.BackColor = Color.Transparent;
+
+            // Estilo del botón (estilo Sudoku)
+            btnNewGame.Text = "NUEVO JUEGO";
+            btnNewGame.Size = new Size(300, 55);
+            btnNewGame.Location = new Point(200, 690);
+            btnNewGame.Font = new Font("Segoe UI", 14, FontStyle.Bold);
+            btnNewGame.ForeColor = Color.White;
+            btnNewGame.BackColor = Color.FromArgb(52, 152, 219);
+            btnNewGame.FlatStyle = FlatStyle.Flat;
+            btnNewGame.FlatAppearance.BorderSize = 0;
+            btnNewGame.FlatAppearance.MouseOverBackColor = Color.FromArgb(41, 128, 185);
+            btnNewGame.Cursor = Cursors.Hand;
         }
 
         private void StartNewGame()
@@ -60,7 +122,7 @@ namespace GalletaAI
             DrawInitialPattern();
 
             UpdateStatus();
-            this.Invalidate();
+            boardPanel.Invalidate();
         }
 
         private void DefinePlayableArea()
@@ -97,7 +159,6 @@ namespace GalletaAI
 
         private void DrawInitialPattern()
         {
-            // ✅ Marcar las 4 esquinas como NO JUGABLES antes de dibujar el patrón
             var cornerSquares = new HashSet<(int, int)> { (1, 6), (6, 1), (6, 11), (11, 6) };
 
             foreach (var (row, col) in cornerSquares)
@@ -174,18 +235,59 @@ namespace GalletaAI
             StartNewGame();
         }
 
-        private void Form1_Paint(object? sender, PaintEventArgs e)
+        private bool IsSquarePlayable(int row, int col)
+        {
+            // Lista de cuadrados jugables (incluyendo las esquinas negras que NO deben ser grises)
+            var playableSquares = new HashSet<(int, int)>
+            {
+                (1, 6),
+                (2, 5), (2, 6), (2, 7),
+                (3, 4), (3, 5), (3, 6), (3, 7), (3, 8),
+                (4, 3), (4, 4), (4, 5), (4, 6), (4, 7), (4, 8), (4, 9),
+                (5, 2), (5, 3), (5, 4), (5, 5), (5, 6), (5, 7), (5, 8), (5, 9), (5, 10),
+                (6, 1), (6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7), (6, 8), (6, 9), (6, 10), (6, 11),
+                (7, 2), (7, 3), (7, 4), (7, 5), (7, 6), (7, 7), (7, 8), (7, 9), (7, 10),
+                (8, 3), (8, 4), (8, 5), (8, 6), (8, 7), (8, 8), (8, 9),
+                (9, 4), (9, 5), (9, 6), (9, 7), (9, 8),
+                (10, 5), (10, 6), (10, 7),
+                (11, 6)
+            };
+
+            return playableSquares.Contains((row, col));
+        }
+
+        private void BoardPanel_Paint(object? sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-            int totalWidth = 13 * GRID_SIZE;
-            int totalHeight = 13 * GRID_SIZE;
-            int offsetX = (this.ClientSize.Width - totalWidth) / 2;
-            int offsetY = (this.ClientSize.Height - totalHeight) / 2 + 20;
+            // Offset dentro del panel
+            int offsetX = 10;
+            int offsetY = 10;
+
+            // Fondo blanco del área completa
+            g.FillRectangle(Brushes.White, offsetX, offsetY, 13 * GRID_SIZE, 13 * GRID_SIZE);
+
+            // Dibujar fondo gris SOLO en cuadrados NO jugables
+            Brush nonPlayableBrush = new SolidBrush(Color.FromArgb(200, 200, 200));
+            for (int row = 0; row < GameState.BOARD_SIZE; row++)
+            {
+                for (int col = 0; col < GameState.BOARD_SIZE; col++)
+                {
+                    if (!IsSquarePlayable(row, col))
+                    {
+                        Point p1 = GetDotPosition(row, col, offsetX, offsetY);
+                        Point p2 = GetDotPosition(row, col + 1, offsetX, offsetY);
+                        Point p3 = GetDotPosition(row + 1, col + 1, offsetX, offsetY);
+                        Point p4 = GetDotPosition(row + 1, col, offsetX, offsetY);
+
+                        Point[] square = { p1, p2, p3, p4 };
+                        g.FillPolygon(nonPlayableBrush, square);
+                    }
+                }
+            }
 
             DrawGridBackground(g, offsetX, offsetY);
-            DrawGameDots(g, offsetX, offsetY);
             DrawGameLines(g, offsetX, offsetY);
 
             if (_hoveredMove != null && !_aiThinking && _gameState.CurrentPlayer == Player.Human && IsLinePlayable(_hoveredMove))
@@ -209,32 +311,7 @@ namespace GalletaAI
                 g.DrawLine(gridPen, offsetX, y, offsetX + 13 * GRID_SIZE, y);
             }
 
-            Brush dotBrush = new SolidBrush(Color.FromArgb(180, 200, 200, 200));
-            int smallDotSize = 3;
-
-            for (int row = 0; row < 14; row++)
-            {
-                for (int col = 0; col < 14; col++)
-                {
-                    int x = offsetX + col * GRID_SIZE;
-                    int y = offsetY + row * GRID_SIZE;
-                    g.FillEllipse(dotBrush, x - smallDotSize / 2, y - smallDotSize / 2, smallDotSize, smallDotSize);
-                }
-            }
-        }
-
-        private void DrawGameDots(Graphics g, int offsetX, int offsetY)
-        {
-            Brush gameDotBrush = new SolidBrush(Color.FromArgb(100, 100, 100));
-
-            for (int row = 0; row <= GameState.BOARD_SIZE; row++)
-            {
-                for (int col = 0; col <= GameState.BOARD_SIZE; col++)
-                {
-                    Point p = GetDotPosition(row, col, offsetX, offsetY);
-                    g.FillEllipse(gameDotBrush, p.X - DOT_SIZE / 2, p.Y - DOT_SIZE / 2, DOT_SIZE, DOT_SIZE);
-                }
-            }
+            // SIN PUNTOS - removido completamente
         }
 
         private Point GetDotPosition(int row, int col, int offsetX, int offsetY)
@@ -389,10 +466,8 @@ namespace GalletaAI
         {
             const int TOLERANCE = 15;
 
-            int totalWidth = 13 * GRID_SIZE;
-            int totalHeight = 13 * GRID_SIZE;
-            int offsetX = (this.ClientSize.Width - totalWidth) / 2;
-            int offsetY = (this.ClientSize.Height - totalHeight) / 2 + 20;
+            int offsetX = 10;
+            int offsetY = 10;
 
             for (int r = 0; r <= GameState.BOARD_SIZE; r++)
             {
@@ -465,24 +540,31 @@ namespace GalletaAI
             return Math.Sqrt(dx * dx + dy * dy);
         }
 
-        private void Form1_MouseMove(object? sender, MouseEventArgs e)
+        private void BoardPanel_MouseMove(object? sender, MouseEventArgs e)
         {
             if (_gameState.IsGameOver() || _aiThinking || _gameState.CurrentPlayer != Player.Human)
             {
-                _hoveredMove = null;
-                this.Invalidate();
+                if (_hoveredMove != null)
+                {
+                    _hoveredMove = null;
+                    boardPanel.Invalidate();
+                }
                 return;
             }
 
             Move? move = GetMoveAtPosition(e.X, e.Y);
-            if (move != _hoveredMove)
+
+            // Solo redibujar si el movimiento cambió
+            if ((move == null && _hoveredMove != null) ||
+                (move != null && _hoveredMove == null) ||
+                (move != null && _hoveredMove != null && !move.Equals(_hoveredMove)))
             {
                 _hoveredMove = move;
-                this.Invalidate();
+                boardPanel.Invalidate();
             }
         }
 
-        private async void Form1_MouseClick(object? sender, MouseEventArgs e)
+        private async void BoardPanel_MouseClick(object? sender, MouseEventArgs e)
         {
             if (_gameState.IsGameOver() || _aiThinking || _gameState.CurrentPlayer != Player.Human)
                 return;
@@ -499,7 +581,7 @@ namespace GalletaAI
             _gameState.ApplyMove(move);
 
             UpdateStatus();
-            this.Invalidate();
+            boardPanel.Invalidate();
 
             if (_gameState.IsGameOver())
             {
@@ -517,7 +599,7 @@ namespace GalletaAI
         {
             _aiThinking = true;
             UpdateStatus();
-            this.Invalidate();
+            boardPanel.Invalidate();
 
             await Task.Delay(300);
 
@@ -533,7 +615,7 @@ namespace GalletaAI
 
             _aiThinking = false;
             UpdateStatus();
-            this.Invalidate();
+            boardPanel.Invalidate();
 
             if (_gameState.IsGameOver())
             {
@@ -546,17 +628,17 @@ namespace GalletaAI
             if (_aiThinking)
             {
                 lblStatus.Text = "La IA está pensando...";
-                lblStatus.ForeColor = Color.DarkOrange;
+                lblStatus.ForeColor = Color.FromArgb(243, 156, 18);
             }
             else if (_gameState.IsGameOver())
             {
                 lblStatus.Text = $"¡Juego terminado! - H: {_gameState.HumanScore} | IA: {_gameState.AIScore}";
-                lblStatus.ForeColor = Color.Black;
+                lblStatus.ForeColor = Color.FromArgb(52, 73, 94);
             }
             else if (_gameState.CurrentPlayer == Player.Human)
             {
                 lblStatus.Text = $"Tu turno - H: {_gameState.HumanScore} | IA: {_gameState.AIScore}";
-                lblStatus.ForeColor = Color.ForestGreen;
+                lblStatus.ForeColor = Color.FromArgb(41, 128, 185);
             }
             else
             {

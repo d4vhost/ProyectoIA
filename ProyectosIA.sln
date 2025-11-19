@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36327.8
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OchoReinasSolver", "OchoReinasSolver\OchoReinasSolver.csproj", "{0A53913F-8B21-42D0-A780-C94590736CCF}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OchoPuzzle", "OchoPuzzle\OchoPuzzle.csproj", "{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SEL", "SEL\SEL.csproj", "{EA81BC41-E7FD-4A3D-A851-F96A5324D95C}"
@@ -13,16 +11,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalletaAI", "GalletaAI\Gall
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sudoku", "Sudoku\Sudoku.csproj", "{02A75359-23CF-4E52-902F-0C8364BFAD96}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OchoReinasSolver", "OchoReinasSolver\OchoReinasSolver.csproj", "{CE90BA67-9C85-479C-92CF-93367A744CC1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0A53913F-8B21-42D0-A780-C94590736CCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0A53913F-8B21-42D0-A780-C94590736CCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0A53913F-8B21-42D0-A780-C94590736CCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0A53913F-8B21-42D0-A780-C94590736CCF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D6858D0-D79E-47AE-B2E1-D3AFEEA2B68D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -39,6 +35,10 @@ Global
 		{02A75359-23CF-4E52-902F-0C8364BFAD96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02A75359-23CF-4E52-902F-0C8364BFAD96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02A75359-23CF-4E52-902F-0C8364BFAD96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE90BA67-9C85-479C-92CF-93367A744CC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE90BA67-9C85-479C-92CF-93367A744CC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE90BA67-9C85-479C-92CF-93367A744CC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE90BA67-9C85-479C-92CF-93367A744CC1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

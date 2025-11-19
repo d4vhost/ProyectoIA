@@ -1,4 +1,4 @@
-// Archivo: OchoPuzzle/Form1.cs
+﻿// Archivo: OchoPuzzle/Form1.cs
 using OchoPuzzle.Core;
 using SEL;
 using System.Drawing;
@@ -10,6 +10,8 @@ namespace OchoPuzzle
         private Button[,] _buttons = new Button[SqNode.width, SqNode.width];
         private int[,] _board = new int[SqNode.width, SqNode.width];
         private Point _zeroPos;
+        private Panel gamePanel = null!;
+        private Label lblTitle = null!;
 
         public Form1()
         {
@@ -34,51 +36,117 @@ namespace OchoPuzzle
 
         private void Form1_Load(object? sender, EventArgs e)
         {
+            // Configuración del formulario
+            this.Text = "8-Puzzle Solver";
+            this.BackColor = Color.FromArgb(245, 247, 250);
+            this.ClientSize = new Size(420, 620);
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.StartPosition = FormStartPosition.CenterScreen;
+
+            // Título
+            lblTitle = new Label
+            {
+                Text = "8-PUZZLE",
+                Font = new Font("Segoe UI", 28, FontStyle.Bold),
+                ForeColor = Color.FromArgb(41, 128, 185),
+                AutoSize = false,
+                Size = new Size(380, 50),
+                Location = new Point(20, 15),
+                TextAlign = ContentAlignment.MiddleCenter,
+                BackColor = Color.Transparent
+            };
+            this.Controls.Add(lblTitle);
+
+            // Panel contenedor del juego
+            gamePanel = new Panel
+            {
+                Size = new Size(280, 280),
+                Location = new Point(70, 80),
+                BackColor = Color.FromArgb(44, 62, 80),
+                BorderStyle = BorderStyle.None
+            };
+            this.Controls.Add(gamePanel);
+
+            // Crear botones dentro del panel
             for (int i = 0; i < SqNode.width; i++)
             {
                 for (int j = 0; j < SqNode.width; j++)
                 {
-                    Button btn = new Button();
-                    btn.Size = new Size(80, 80);
-                    btn.Location = new Point(j * 80 + 20, i * 80 + 20);
-                    btn.Font = new Font("Arial", 24, FontStyle.Bold);
-                    btn.Tag = new Point(i, j);
+                    Button btn = new Button
+                    {
+                        Size = new Size(85, 85),
+                        Location = new Point(j * 90 + 10, i * 90 + 10),
+                        Font = new Font("Segoe UI", 32, FontStyle.Bold),
+                        Tag = new Point(i, j),
+                        BackColor = Color.White,
+                        ForeColor = Color.FromArgb(52, 73, 94),
+                        FlatStyle = FlatStyle.Flat,
+                        Cursor = Cursors.Hand
+                    };
+
+                    btn.FlatAppearance.BorderSize = 0;
+                    btn.FlatAppearance.MouseOverBackColor = Color.FromArgb(236, 240, 241);
                     btn.Click += Button_Click;
 
-                    this.Controls.Add(btn);
+                    gamePanel.Controls.Add(btn);
                     _buttons[i, j] = btn;
                 }
             }
 
-            // A�adir los botones de control
-            this.btnSolve.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btnSolve.Location = new System.Drawing.Point(20, 270);
-            this.btnSolve.Name = "btnSolve";
-            this.btnSolve.Size = new System.Drawing.Size(115, 40);
-            this.btnSolve.Text = "Resolver (A*)";
-            this.btnSolve.UseVisualStyleBackColor = true;
-            this.btnSolve.Click += new System.EventHandler(this.btnSolve_Click);
+            // Label de estado
+            this.lblStatus.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            this.lblStatus.ForeColor = Color.FromArgb(52, 73, 94);
+            this.lblStatus.AutoSize = false;
+            this.lblStatus.Size = new Size(380, 40);
+            this.lblStatus.Location = new Point(20, 380);
+            this.lblStatus.TextAlign = ContentAlignment.MiddleCenter;
+            this.lblStatus.Text = "¡Listo para jugar!";
+            this.lblStatus.BackColor = Color.Transparent;
 
-            this.btnShuffle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btnShuffle.Location = new System.Drawing.Point(145, 270);
-            this.btnShuffle.Name = "btnShuffle";
-            this.btnShuffle.Size = new System.Drawing.Size(115, 40);
-            this.btnShuffle.Text = "Desordenar";
-            this.btnShuffle.UseVisualStyleBackColor = true;
-            this.btnShuffle.Click += new System.EventHandler(this.btnShuffle_Click);
+            // Botón Desordenar
+            this.btnShuffle.Text = "DESORDENAR";
+            this.btnShuffle.Font = new Font("Segoe UI", 12, FontStyle.Bold);
+            this.btnShuffle.Size = new Size(180, 50);
+            this.btnShuffle.Location = new Point(35, 440);
+            this.btnShuffle.ForeColor = Color.White;
+            this.btnShuffle.BackColor = Color.FromArgb(52, 152, 219);
+            this.btnShuffle.FlatStyle = FlatStyle.Flat;
+            this.btnShuffle.FlatAppearance.BorderSize = 0;
+            this.btnShuffle.FlatAppearance.MouseOverBackColor = Color.FromArgb(41, 128, 185);
+            this.btnShuffle.Cursor = Cursors.Hand;
+            this.btnShuffle.Click += btnShuffle_Click;
 
-            this.lblStatus.AutoSize = true;
-            this.lblStatus.Location = new System.Drawing.Point(20, 325);
-            this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Text = "Listo.";
+            // Botón Resolver
+            this.btnSolve.Text = "RESOLVER (A*)";
+            this.btnSolve.Font = new Font("Segoe UI", 12, FontStyle.Bold);
+            this.btnSolve.Size = new Size(180, 50);
+            this.btnSolve.Location = new Point(225, 440);
+            this.btnSolve.ForeColor = Color.White;
+            this.btnSolve.BackColor = Color.FromArgb(46, 204, 113);
+            this.btnSolve.FlatStyle = FlatStyle.Flat;
+            this.btnSolve.FlatAppearance.BorderSize = 0;
+            this.btnSolve.FlatAppearance.MouseOverBackColor = Color.FromArgb(39, 174, 96);
+            this.btnSolve.Cursor = Cursors.Hand;
+            this.btnSolve.Click += btnSolve_Click;
+
+            // Label de información adicional
+            Label lblInfo = new Label
+            {
+                Text = "Haz clic en las fichas adyacentes al espacio vacío",
+                Font = new Font("Segoe UI", 9, FontStyle.Regular),
+                ForeColor = Color.FromArgb(127, 140, 141),
+                AutoSize = false,
+                Size = new Size(380, 30),
+                Location = new Point(20, 510),
+                TextAlign = ContentAlignment.MiddleCenter,
+                BackColor = Color.Transparent
+            };
+            this.Controls.Add(lblInfo);
 
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.btnShuffle);
             this.Controls.Add(this.btnSolve);
-
-            this.ClientSize = new System.Drawing.Size(284, 361);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Text = "8-Puzzle Solver";
 
             UpdateUI();
         }
@@ -101,15 +169,25 @@ namespace OchoPuzzle
 
                 if (IsSolved())
                 {
-                    MessageBox.Show("�Felicidades, has ganado!");
+                    lblStatus.Text = "🎉 ¡Felicidades, resolviste el puzzle!";
+                    lblStatus.ForeColor = Color.FromArgb(46, 204, 113);
+                    MessageBox.Show("¡Felicidades, has ganado!", "¡Victoria!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
         }
 
         private async void btnSolve_Click(object? sender, EventArgs e)
         {
-            this.Enabled = false;
-            lblStatus.Text = "Calculando soluci�n A*...";
+            if (IsSolved())
+            {
+                MessageBox.Show("El puzzle ya está resuelto.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            this.btnSolve.Enabled = false;
+            this.btnShuffle.Enabled = false;
+            lblStatus.Text = "🤖 Calculando solución con A*...";
+            lblStatus.ForeColor = Color.FromArgb(243, 156, 18);
 
             SqPuzzle solver = new SqPuzzle((int[,])_board.Clone(), _zeroPos);
 
@@ -117,13 +195,18 @@ namespace OchoPuzzle
 
             if (solutionPath.Count == 0)
             {
-                lblStatus.Text = "No se encontr� soluci�n.";
-                MessageBox.Show("No se pudo encontrar una soluci�n con el algoritmo A*.");
-                this.Enabled = true;
+                lblStatus.Text = "❌ No se encontró solución";
+                lblStatus.ForeColor = Color.FromArgb(231, 76, 60);
+                MessageBox.Show("No se pudo encontrar una solución con el algoritmo A*.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                this.btnSolve.Enabled = true;
+                this.btnShuffle.Enabled = true;
                 return;
             }
 
-            lblStatus.Text = $"Soluci�n en {solutionPath.Count - 1} movimientos. (Nodos: {solver.nodesSearched})";
+            lblStatus.Text = $"✓ Solución en {solutionPath.Count - 1} movimientos";
+            lblStatus.ForeColor = Color.FromArgb(46, 204, 113);
+
+            await Task.Delay(500);
 
             foreach (var node in solutionPath)
             {
@@ -133,8 +216,11 @@ namespace OchoPuzzle
                 await Task.Delay(300);
             }
 
-            MessageBox.Show("�Soluci�n A* completada!");
-            this.Enabled = true;
+            MessageBox.Show($"¡Solución A* completada!\n\nMovimientos realizados: {solutionPath.Count - 1}",
+                "Solución Completada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            this.btnSolve.Enabled = true;
+            this.btnShuffle.Enabled = true;
         }
 
         private void btnShuffle_Click(object? sender, EventArgs e)
@@ -150,7 +236,8 @@ namespace OchoPuzzle
                 _zeroPos = randomMove;
             }
             UpdateUI();
-            lblStatus.Text = "Tablero desordenado. �Listo!";
+            lblStatus.Text = "🎲 Tablero desordenado. ¡A jugar!";
+            lblStatus.ForeColor = Color.FromArgb(52, 152, 219);
         }
 
         private void UpdateUI()
@@ -162,6 +249,13 @@ namespace OchoPuzzle
                     int val = _board[i, j];
                     _buttons[i, j].Text = val == 0 ? "" : val.ToString();
                     _buttons[i, j].Visible = (val != 0);
+
+                    if (val != 0)
+                    {
+                        // Efecto visual para números
+                        _buttons[i, j].BackColor = Color.White;
+                        _buttons[i, j].ForeColor = Color.FromArgb(52, 73, 94);
+                    }
                 }
             }
         }

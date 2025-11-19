@@ -3,20 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{02A75359-23CF-4E52-902F-0C8364BFAD96}|Sudoku\\Sudoku.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\sudoku\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{02A75359-23CF-4E52-902F-0C8364BFAD96}|Sudoku\\Sudoku.csproj|solutionrelative:sudoku\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoReinasSolver\\Form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:OchoReinasSolver\\Form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{02A75359-23CF-4E52-902F-0C8364BFAD96}|Sudoku\\Sudoku.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\sudoku\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{02A75359-23CF-4E52-902F-0C8364BFAD96}|Sudoku\\Sudoku.csproj|solutionrelative:sudoku\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+      "AbsoluteMoniker": "D:0:0:{CE90BA67-9C85-479C-92CF-93367A744CC1}|OchoReinasSolver\\OchoReinasSolver.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\ochoreinassolver\\core\\solvequeensgui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE90BA67-9C85-479C-92CF-93367A744CC1}|OchoReinasSolver\\OchoReinasSolver.csproj|solutionrelative:ochoreinassolver\\core\\solvequeensgui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{02A75359-23CF-4E52-902F-0C8364BFAD96}|Sudoku\\Sudoku.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\sudoku\\core\\sudokusolver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{02A75359-23CF-4E52-902F-0C8364BFAD96}|Sudoku\\Sudoku.csproj|solutionrelative:sudoku\\core\\sudokusolver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{02A75359-23CF-4E52-902F-0C8364BFAD96}|Sudoku\\Sudoku.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\sudoku\\core\\sudokunode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{02A75359-23CF-4E52-902F-0C8364BFAD96}|Sudoku\\Sudoku.csproj|solutionrelative:sudoku\\core\\sudokunode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CE90BA67-9C85-479C-92CF-93367A744CC1}|OchoReinasSolver\\OchoReinasSolver.csproj|c:\\users\\d4vho\\desktop\\proyectos\\ejercicios cepeda\\proyectosia\\ochoreinassolver\\ochoreinassolver.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{CE90BA67-9C85-479C-92CF-93367A744CC1}|OchoReinasSolver\\OchoReinasSolver.csproj|solutionrelative:ochoreinassolver\\ochoreinassolver.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,57 +22,45 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Form1.cs",
-              "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\Sudoku\\Form1.cs",
-              "RelativeDocumentMoniker": "Sudoku\\Form1.cs",
-              "ToolTip": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\Sudoku\\Form1.cs",
-              "RelativeToolTip": "Sudoku\\Form1.cs",
-              "ViewState": "AgIAAPUAAAAAAAAAAAAswBEBAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-18T23:02:26.789Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Form1.cs [Dise\u00F1o]",
-              "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\Sudoku\\Form1.cs",
-              "RelativeDocumentMoniker": "Sudoku\\Form1.cs",
-              "ToolTip": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\Sudoku\\Form1.cs [Dise\u00F1o]",
-              "RelativeToolTip": "Sudoku\\Form1.cs [Dise\u00F1o]",
+              "Title": "SolveQueensGUI.cs",
+              "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoReinasSolver\\Core\\SolveQueensGUI.cs",
+              "RelativeDocumentMoniker": "OchoReinasSolver\\Core\\SolveQueensGUI.cs",
+              "ToolTip": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoReinasSolver\\Core\\SolveQueensGUI.cs",
+              "RelativeToolTip": "OchoReinasSolver\\Core\\SolveQueensGUI.cs",
+              "ViewState": "AgIAACMAAAAAAAAAAAAgwCYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-18T22:58:55.416Z",
-              "EditorCaption": " [Dise\u00F1o]"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "SudokuNode.cs",
-              "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\Sudoku\\Core\\SudokuNode.cs",
-              "RelativeDocumentMoniker": "Sudoku\\Core\\SudokuNode.cs",
-              "ToolTip": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\Sudoku\\Core\\SudokuNode.cs",
-              "RelativeToolTip": "Sudoku\\Core\\SudokuNode.cs",
-              "ViewState": "AgIAAHkAAAAAAAAAAAAkwIwAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-18T22:33:21.959Z",
+              "WhenOpened": "2025-11-19T00:05:08.789Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "SudokuSolver.cs",
-              "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\Sudoku\\Core\\SudokuSolver.cs",
-              "RelativeDocumentMoniker": "Sudoku\\Core\\SudokuSolver.cs",
-              "ToolTip": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\Sudoku\\Core\\SudokuSolver.cs",
-              "RelativeToolTip": "Sudoku\\Core\\SudokuSolver.cs",
-              "ViewState": "AgIAAIgAAAAAAAAAAAAgwJAAAAAiAAAAAAAAAA==",
+              "Title": "OchoReinasSolver",
+              "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoReinasSolver\\OchoReinasSolver.csproj",
+              "RelativeDocumentMoniker": "OchoReinasSolver\\OchoReinasSolver.csproj",
+              "ToolTip": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoReinasSolver\\OchoReinasSolver.csproj",
+              "RelativeToolTip": "OchoReinasSolver\\OchoReinasSolver.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-11-19T00:04:48.758Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoReinasSolver\\Form1.cs",
+              "RelativeDocumentMoniker": "OchoReinasSolver\\Form1.cs",
+              "ToolTip": "C:\\Users\\d4vho\\Desktop\\Proyectos\\Ejercicios Cepeda\\ProyectosIA\\OchoReinasSolver\\Form1.cs",
+              "RelativeToolTip": "OchoReinasSolver\\Form1.cs",
+              "ViewState": "AgIAADMAAAAAAAAAAAAYwD8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-18T22:33:20.594Z",
+              "WhenOpened": "2025-11-19T00:04:20.853Z",
               "EditorCaption": ""
             }
           ]
